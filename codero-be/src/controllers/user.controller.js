@@ -296,6 +296,7 @@ exports.login = (req, res) => {
             res.send({
                 id: user.id,
                 userId: user.userId,
+                posisi: user.posisi,
                 accessToken: token,
             });
         })
