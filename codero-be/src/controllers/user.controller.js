@@ -307,7 +307,6 @@ exports.login = (req, res) => {
 };
 
 exports.register = (req, res) => {
-    
     // Check if all required fields are present
     if (
         !req.body.namaDepan ||
