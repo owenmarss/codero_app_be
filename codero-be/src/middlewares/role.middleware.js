@@ -26,6 +26,8 @@ const checkPosisi = (posisi) => {
 
         req.userId = decoded.id;
         req.posisi = decoded.posisi;
+        console.log("berhasil");
+        
         next();
     }
 }

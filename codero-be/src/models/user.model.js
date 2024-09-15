@@ -42,6 +42,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false,
         },
+        accessToken: {
+            type: Sequelize.STRING,
+            allowNull: true,
+        },
         posisi: {
             type: Sequelize.STRING,
             allowNull: false,

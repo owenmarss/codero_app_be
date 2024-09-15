@@ -2,7 +2,7 @@ const db = require("../models");
 const User = db.user;
 const Op = db.Sequelize.Op;
 const bcrypt = require("bcryptjs");
-const { generateToken } = require("../utils/jwt.utils");
+const { generateToken, verifyToken } = require("../utils/jwt.utils");
 
 // Create and Save a new User
 exports.create = (req, res) => {
@@ -271,9 +271,8 @@ exports.deleteAll = (req, res) => {
 };
 
 exports.login = (req, res) => {
-
     const { email, password } = req.body.data;
-
+    
     User.findOne({
         where: { email: email },
     })
@@ -292,6 +291,10 @@ exports.login = (req, res) => {
             }
 
             const token = generateToken(user);
+            
+            User.update({accessToken: token}, {
+                where: { id: user.id },
+            })
 
             res.send({
                 id: user.id,
@@ -308,15 +311,17 @@ exports.login = (req, res) => {
 };
 
 exports.register = (req, res) => {
+    console.log(req.body.data);
+    
     // Check if all required fields are present
     if (
-        !req.body.namaDepan ||
-        !req.body.namaBelakang ||
-        !req.body.email ||
-        !req.body.password ||
-        !req.body.posisi ||
-        !req.body.divisi ||
-        !req.body.cabang
+        !req.body.data.namaDepan ||
+        !req.body.data.namaBelakang ||
+        !req.body.data.email ||
+        !req.body.data.password ||
+        !req.body.data.posisi ||
+        !req.body.data.divisi ||
+        !req.body.data.cabang
     ) {
         return res.status(400).send({
             message: "Content can not be empty!",
@@ -325,7 +330,7 @@ exports.register = (req, res) => {
 
     // Check if the user already exists
     User.findOne({
-        where: { email: req.body.email },
+        where: { email: req.body.data.email },
     })
         .then((user) => {
             if (user) {
@@ -334,19 +339,19 @@ exports.register = (req, res) => {
                 });
             } else {
                 const newUser = {
-                    userId: req.body.userId || null,
-                    namaDepan: req.body.namaDepan,
-                    namaBelakang: req.body.namaBelakang,
-                    jenisKelamin: req.body.jenisKelamin,
-                    tanggalLahir: req.body.tanggalLahir,
-                    email: req.body.email,
-                    noTelp: req.body.noTelp,
-                    alamat: req.body.alamat,
-                    kota: req.body.kota,
-                    password: bcrypt.hashSync(req.body.password, 8),
-                    posisi: req.body.posisi,
-                    divisi: req.body.divisi,
-                    cabang: req.body.cabang,
+                    userId: req.body.data.userId || null,
+                    namaDepan: req.body.data.namaDepan,
+                    namaBelakang: req.body.data.namaBelakang,
+                    jenisKelamin: req.body.data.jenisKelamin,
+                    tanggalLahir: req.body.data.tanggalLahir,
+                    email: req.body.data.email,
+                    noTelp: req.body.data.noTelp,
+                    alamat: req.body.data.alamat,
+                    kota: req.body.data.kota,
+                    password: bcrypt.hashSync(req.body.data.password, 8),
+                    posisi: req.body.data.posisi,
+                    divisi: req.body.data.divisi,
+                    cabang: req.body.data.cabang,
                 };
 
                 User.create(newUser)
@@ -372,3 +377,33 @@ exports.register = (req, res) => {
             });
         });
 };
+
+exports.checkToken = (req, res) => {
+    const accessToken = req.params.accessToken;
+    const decoded = verifyToken(accessToken);
+
+    console.log(decoded);
+
+    User.findOne({
+        where: { id: decoded.id },
+    }).then((user) => {
+        if (user.accessToken == accessToken) {
+            return res.status(200).send({
+                message: "Token is valid!",
+            });
+        } else if (user.accessToken == null) {
+            return res.status(401).send({
+                message: "There is no token!",
+            });
+        }
+
+        return res.status(401).send({
+            message: "Token is invalid!",
+        });
+    })
+    .catch((err) => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while checking token.",
+        });
+    });
+}

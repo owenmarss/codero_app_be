@@ -4,7 +4,7 @@ const secretKey = 'coderoeducation121314';
 
 const generateToken = (user) => {
     return jwt.sign({ id: user.id, role: user.posisi}, secretKey, {
-        expiresIn: '24h', // Token expired in 24 hours
+        expiresIn: '1h', // Token expired in 24 hours
     });
 }
 

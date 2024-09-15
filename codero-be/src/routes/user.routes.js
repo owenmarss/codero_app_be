@@ -11,6 +11,8 @@ router.post('/login', users.login);
 router.post('/', users.create);
 router.get('/', users.findAll);
 router.get('/:id', users.findOne);
+// Check Token
+router.get('/check_token/:accessToken', users.checkToken);
 router.put('/:id/details', users.updateUserDetails);
 router.put('/:id/password', users.updatePassword);
 router.delete('/:id', users.delete);
