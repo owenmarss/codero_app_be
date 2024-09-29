@@ -1,5 +1,4 @@
 // const { where } = require('sequelize');
-const e = require("cors");
 const db = require("../models");
 const Message = db.message;
 const MessageRecipient = db.messageRecipient;

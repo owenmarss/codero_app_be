@@ -35,12 +35,13 @@ db.message = require("./message.model.js")(sequelize, Sequelize);
 db.messageRecipient = require("./message_recipient.model.js")(sequelize, Sequelize);
 
 
-// Materi-Pertemuan relationship
+//* Materi-Pertemuan relationship
 db.materi.hasMany(db.pertemuan, { foreignKey: 'id_materi', as: 'pertemuan' });
 db.pertemuan.belongsTo(db.materi, { foreignKey: 'id_materi', as: 'materi' });
 
 
-// Message-Recipient relationship
+
+//* Message-Recipient relationship
 db.user.hasMany(db.message, { foreignKey: 'id_pengirim', as: 'pengirim' });
 db.message.belongsTo(db.user, { foreignKey: 'id_pengirim', as: 'pengirim' });
 
