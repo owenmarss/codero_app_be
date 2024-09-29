@@ -148,8 +148,10 @@ exports.updatePassword = (req, res) => {
         });
     }
 
+    const hashedPassword = bcrypt.hashSync(password, 8);
+
     User.update(
-        { password },
+        { password: hashedPassword },
         {
             where: { id: id },
         }

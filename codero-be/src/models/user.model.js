@@ -15,7 +15,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
         },
         jenisKelamin: {
-            type: Sequelize.STRING,
+            type: Sequelize.ENUM('Laki-laki', 'Perempuan'),
             allowNull: true,
         },
         tanggalLahir: {
