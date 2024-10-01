@@ -60,7 +60,7 @@ exports.createPertemuan = (req, res) => {
 };
 
 // Get Pertemuan by Materi ID
-exports.getPertemuanByMateriId = (req, res) => {
+exports.getAllPertemuanByMateriId = (req, res) => {
     const id = req.params.id;
 
     Pertemuan.findAll({

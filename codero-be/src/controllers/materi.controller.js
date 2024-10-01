@@ -69,6 +69,40 @@ exports.getAllMateri = (req, res) => {
         });
 };
 
+// Get all Materi with jenis_materi = "Coding"
+exports.getAllMateriCoding = (req, res) => {
+    Materi.findAll({
+        where: { jenis_materi: "Coding" },
+    })
+        .then((materi) => {
+            res.status(200).send(materi);
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message:
+                    err.message ||
+                    "Some error occurred while retrieving Materi.",
+            });
+        });
+}
+
+// Get all Materi with jenis_materi = "Robotic"
+exports.getAllMateriRobotic = (req, res) => {
+    Materi.findAll({
+        where: { jenis_materi: "Robotic" },
+    })
+        .then((materi) => {
+            res.status(200).send(materi);
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message:
+                    err.message ||
+                    "Some error occurred while retrieving Materi.",
+            });
+        });
+}
+
 // Get a Materi by id
 exports.getMateriById = (req, res) => {
     const id = req.params.id;

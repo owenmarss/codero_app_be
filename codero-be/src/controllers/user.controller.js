@@ -302,7 +302,7 @@ exports.login = (req, res) => {
                 id: user.id,
                 userId: user.userId,
                 posisi: user.posisi,
-                accessToken: token,
+                accessToken: token
             });
         })
         .catch((err) => {

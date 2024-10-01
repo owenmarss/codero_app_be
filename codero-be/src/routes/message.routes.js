@@ -3,13 +3,16 @@ const router = express.Router();
 const messages = require('../controllers/message.controller.js');
 const messageRecipients = require('../controllers/message_recipient.controller.js');
 
-router.post('/', messages.sendMessage);
-router.get('/user/:id', messages.getAllMessages);
-router.get('/:id', messages.getMessageById);
-router.get('/unread', messages.getUnreadMessages);
-router.get('/read', messages.getReadMessages);
-router.delete('/', messages.deleteAllMessages);
-router.delete('/:id', messages.deleteMessage);
+const authMiddleware = require('../middlewares/auth.middleware.js')
+const checkPosisi = require('../middlewares/role.middleware.js');
+
+router.post('/', authMiddleware, messages.sendMessage);
+router.get('/user/:id', authMiddleware, messages.getAllMessages);
+router.get('/:id', authMiddleware, messages.getMessageById);
+router.get('/unread', authMiddleware, messages.getUnreadMessages);
+router.get('/read', authMiddleware, messages.getReadMessages);
+router.delete('/', authMiddleware, messages.deleteAllMessages);
+router.delete('/:id', authMiddleware, messages.deleteMessage);
 // router.put('/:messageId/read/:userId', messageRecipients.markAsRead);
 
 module.exports = router;
