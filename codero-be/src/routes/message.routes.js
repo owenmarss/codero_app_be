@@ -8,9 +8,9 @@ const checkPosisi = require('../middlewares/role.middleware.js');
 
 router.post('/', authMiddleware, messages.sendMessage);
 router.get('/user/:id', authMiddleware, messages.getAllMessages);
-router.get('/:id', authMiddleware, messages.getMessageById);
 router.get('/unread', authMiddleware, messages.getUnreadMessages);
 router.get('/read', authMiddleware, messages.getReadMessages);
+router.get('/:id', authMiddleware, messages.getMessageById);
 router.delete('/', authMiddleware, messages.deleteAllMessages);
 router.delete('/:id', authMiddleware, messages.deleteMessage);
 // router.put('/:messageId/read/:userId', messageRecipients.markAsRead);

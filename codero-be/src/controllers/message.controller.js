@@ -3,6 +3,8 @@ const db = require("../models");
 const Message = db.message;
 const MessageRecipient = db.messageRecipient;
 const User = db.user;
+const { verifyToken } = require("../utils/jwt.utils");
+
 
 // Create and Save a new Message
 exports.sendMessage = (req, res) => {
@@ -49,8 +51,13 @@ exports.sendMessage = (req, res) => {
 // Get all messages for a User
 exports.getAllMessages = (req, res) => {
     const user_id = req.params.id;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 6;
 
-    MessageRecipient.findAll({
+    // Calculate the offset
+    const offset = (page - 1) * limit;
+
+    MessageRecipient.findAndCountAll({
         where: { id_penerima: user_id },
         include: {
             model: Message,
@@ -60,9 +67,19 @@ exports.getAllMessages = (req, res) => {
                 attributes: ["namaDepan", "namaBelakang", "email"],
             },
         },
+        limit: limit,
+        offset: offset
     })
-        .then((messages) => {
-            res.status(200).send(messages);
+        .then((result) => {
+            const totalMessages = result.count;
+            const totalPages = Math.ceil(totalMessages / limit);
+
+            res.status(200).send({
+                totalMessages: totalMessages,
+                totalPages: totalPages,
+                currentPage: page,
+                messages: result.rows
+            });
         })
         .catch((err) => {
             res.status(500).send({
@@ -119,10 +136,15 @@ exports.getMessageById = (req, res) => {
 
 // Get all unread messages for a User
 exports.getUnreadMessages = (req, res) => {
-    const user_id = req.params.id;
-    // res.status(200).send(
-    //     {message: user_id + " " + "Unread Messages"}
-    // );
+    // Get user token
+    let token = req.headers["authorization"];
+    token = token.split(" ")[1];
+    console.log(token);
+    // Get user id from token
+    const decoded = verifyToken(token, process.env.JWT_SECRET);
+    const user_id = decoded.id;
+    
+    console.log(user_id);
 
     MessageRecipient.findAll({
         where: { id_penerima: user_id, status: "Belum Dibaca" },
@@ -134,17 +156,15 @@ exports.getUnreadMessages = (req, res) => {
                 attributes: ["namaDepan", "namaBelakang", "email"],
             },
         },
-    })
-        .then((messages) => {
-            res.status(500).send(messages);
-        })
-        .catch((err) => {
-            res.status(500).send({
-                message:
-                    err.message ||
-                    "Some error occurred while retrieving messages.",
-            });
+    }).then((messages) => {
+        res.status(200).send(messages);
+    }).catch((err) => {
+        res.status(500).send({
+            message:
+                err.message ||
+                "Some error occurred while retrieving messages.",
         });
+    });
 };
 
 // Get all read messages for a User

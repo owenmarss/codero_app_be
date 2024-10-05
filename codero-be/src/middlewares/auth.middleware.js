@@ -4,6 +4,8 @@ module.exports = (req, res, next) => {
     var token = req.headers['authorization'];
     
     if(!token) {
+        console.log(token);
+        
         return res.status(403).send({
             message: 'No token provided!',
         });

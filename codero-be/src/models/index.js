@@ -28,20 +28,31 @@ db.sequelize = sequelize;
 
 // Define models
 db.user = require("./user.model.js")(sequelize, Sequelize);
+db.schedule = require("./schedule.model.js")(sequelize, Sequelize);
 db.schoolCentre = require("./schoolcentre.model.js")(sequelize, Sequelize);
+db.student = require("./student.model.js")(sequelize, Sequelize);
 db.materi = require("./materi.model.js")(sequelize, Sequelize);
 db.pertemuan = require("./pertemuan.model.js")(sequelize, Sequelize);
 db.message = require("./message.model.js")(sequelize, Sequelize);
 db.messageRecipient = require("./message_recipient.model.js")(sequelize, Sequelize);
 
 
-//* Materi-Pertemuan relationship
+//* SchoolCentre - Materi relationship
+db.schoolCentre.belongsTo(db.materi, { foreignKey: 'id_materi', as: 'materi' });
+db.materi.hasMany(db.schoolCentre, { foreignKey: 'id_materi', as: 'schoolCentre' });
+
+
+//* Student - Materi relationship
+db.student.belongsTo(db.materi, { foreignKey: 'id_materi', as: 'materi' });
+db.materi.hasMany(db.student, { foreignKey: 'id_materi', as: 'student' });
+
+
+//* Materi - Pertemuan relationship
 db.materi.hasMany(db.pertemuan, { foreignKey: 'id_materi', as: 'pertemuan' });
 db.pertemuan.belongsTo(db.materi, { foreignKey: 'id_materi', as: 'materi' });
 
 
-
-//* Message-Recipient relationship
+//* Message - Recipient relationship
 db.user.hasMany(db.message, { foreignKey: 'id_pengirim', as: 'pengirim' });
 db.message.belongsTo(db.user, { foreignKey: 'id_pengirim', as: 'pengirim' });
 

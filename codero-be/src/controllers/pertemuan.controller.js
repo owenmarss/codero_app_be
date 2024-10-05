@@ -59,6 +59,29 @@ exports.createPertemuan = (req, res) => {
         });
 };
 
+// Get all Pertemuan
+exports.getAllPertemuan = (req, res) => {
+    Pertemuan.findAll({
+        include: [
+            {
+                model: Materi,
+                as: "materi",
+                attributes: ["id", "judul_materi"],
+            },
+        ],
+    })
+        .then((pertemuan) => {
+            res.status(200).send(pertemuan);
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message:
+                    err.message ||
+                    "Some error occurred while retrieving Pertemuan.",
+            });
+        });
+}
+
 // Get Pertemuan by Materi ID
 exports.getAllPertemuanByMateriId = (req, res) => {
     const id = req.params.id;
@@ -134,7 +157,7 @@ exports.getPertemuanById = (req, res) => {
 // Update Pertemuan by ID
 exports.updatePertemuan = (req, res) => {
     const id = req.params.id;
-    const { id_materi, judul_pertemuan, isi_pertemuan, link_source, link_video } = req.body.data;
+    const { id_materi, judul_pertemuan, index_pertemuan, isi_pertemuan, link_source, link_video } = req.body.data;
 
     if (!id_materi || !judul_pertemuan) {
         return res.status(400).send({
@@ -146,6 +169,7 @@ exports.updatePertemuan = (req, res) => {
         {
             id_materi: id_materi,
             judul_pertemuan: judul_pertemuan,
+            index_pertemuan: index_pertemuan,
             isi_pertemuan: isi_pertemuan,
             link_source: link_source,
             link_video: link_video,

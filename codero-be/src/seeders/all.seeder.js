@@ -4,6 +4,8 @@ const seedMessages = require("./message.seeder"); // Path to message seeder
 const seedMessageRecipients = require("./message_recipient.seeder"); // Path to message_recipient seeder
 const seedMateri = require("./materi.seeder"); // Path to materi seeder
 const seedPertemuan = require("./pertemuan.seeder"); // Path to pertemuan seeder
+const seedSchoolCentre = require("./schoolcentre.seeder"); // Path to schoolcentre seeder
+const seedStudent = require("./student.seeder") // Path to student seeder
 
 const seedAll = async () => {
     try {
@@ -20,11 +22,18 @@ const seedAll = async () => {
         //* Seed message recipients after messages
         await seedMessageRecipients();
 
+
         //* Seed materi
         await seedMateri();
-
+        
         //* Seed pertemuan
         await seedPertemuan();
+        
+        //* Seed school centres
+        await seedSchoolCentre();
+
+        //* Seed students
+        await seedStudent();
 
         console.log("All data seeded successfully.");
     } catch (error) {
