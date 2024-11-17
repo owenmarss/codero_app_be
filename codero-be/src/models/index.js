@@ -29,7 +29,8 @@ db.sequelize = sequelize;
 // Define models
 db.user = require("./user.model.js")(sequelize, Sequelize);
 db.schedule = require("./schedule.model.js")(sequelize, Sequelize);
-db.schoolCentre = require("./schoolcentre.model.js")(sequelize, Sequelize);
+db.userSchedule = require("./user_schedule.model.js")(sequelize, Sequelize);
+db.partner = require("./partner.model.js")(sequelize, Sequelize);
 db.student = require("./student.model.js")(sequelize, Sequelize);
 db.materi = require("./materi.model.js")(sequelize, Sequelize);
 db.pertemuan = require("./pertemuan.model.js")(sequelize, Sequelize);
@@ -37,14 +38,46 @@ db.message = require("./message.model.js")(sequelize, Sequelize);
 db.messageRecipient = require("./message_recipient.model.js")(sequelize, Sequelize);
 
 
-//* SchoolCentre - Materi relationship
-db.schoolCentre.belongsTo(db.materi, { foreignKey: 'id_materi', as: 'materi' });
-db.materi.hasMany(db.schoolCentre, { foreignKey: 'id_materi', as: 'schoolCentre' });
+// Define Relationships
+//* Partner - Materi relationship
+db.partner.belongsTo(db.materi, { foreignKey: 'id_materi', as: 'materi' });
+db.materi.hasMany(db.partner, { foreignKey: 'id_materi', as: 'partner' });
 
 
 //* Student - Materi relationship
 db.student.belongsTo(db.materi, { foreignKey: 'id_materi', as: 'materi' });
 db.materi.hasMany(db.student, { foreignKey: 'id_materi', as: 'student' });
+
+
+//* Schedule - Partner relationship
+db.schedule.belongsTo(db.partner, { foreignKey: 'partner_id', as: 'partner' });
+db.partner.hasMany(db.schedule, { foreignKey: 'partner_id', as: 'schedules' });
+
+
+//* Schedule - Student relationship
+db.schedule.belongsTo(db.student, { foreignKey: 'student_id', as: 'student' });
+db.student.hasMany(db.schedule, { foreignKey: 'student_id', as: 'schedules' });
+
+
+//* User - Schedule relationship via user_schedule
+db.user.hasMany(db.userSchedule, { foreignKey: 'user_id', as: 'userSchedule' });
+db.userSchedule.belongsTo(db.user, { foreignKey: 'user_id',  as: 'user' });
+
+db.schedule.hasMany(db.userSchedule, { foreignKey: 'schedule_id', as: 'userSchedule' });
+db.userSchedule.belongsTo(db.schedule, { foreignKey: 'schedule_id', as: 'schedule' });
+
+// db.user.belongsToMany(db.schedule, {
+//     through: db.userSchedule,
+//     foreignKey: 'user_id',
+//     otherKey: 'schedule_id',
+//     as: 'schedules'
+// });
+// db.schedule.belongsToMany(db.user, {
+//     through: db.userSchedule,
+//     foreignKey: 'schedule_id',
+//     otherKey: 'user_id',
+//     as: 'users'
+// });
 
 
 //* Materi - Pertemuan relationship

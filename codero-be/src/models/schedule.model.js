@@ -2,16 +2,16 @@ const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize, Sequelize) => {
     const Schedule = sequelize.define('schedule', {
-        id_user: {
-            type: DataTypes.INTEGER,
-            allowNull: true
-        },
         jenis_client: {
             type: DataTypes.ENUM('Sekolah / Centre', 'Private'),
             allowNull: false
         },
         jenis_sesi: {
             type: DataTypes.ENUM('Onsite', 'Online'),
+            allowNull: false
+        },
+        jenis_kegiatan: {
+            type: DataTypes.ENUM('Mengajar', 'Trial Class', 'Visit', 'Training', 'Office'),
             allowNull: false
         },
         hari: {
@@ -30,9 +30,28 @@ module.exports = (sequelize, Sequelize) => {
             type: DataTypes.TIME,
             allowNull: false,
         },
+        partner_id: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            references: {
+                model: 'partners',
+                key: 'id'
+            },
+            onDelete: 'SET NULL',
+        },
+        student_id: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            references: {
+                model: 'students',
+                key: 'id'
+            },
+            onDelete: 'SET NULL',
+        },
         status: {
             type: DataTypes.ENUM('Masuk', 'Libur'),
-            allowNull: false
+            allowNull: false,
+            defaultValue: 'Masuk'
         },
     })
 

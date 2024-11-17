@@ -54,6 +54,8 @@ exports.getAllMessages = (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 6;
 
+    // console.log(req.query);
+    
     // Calculate the offset
     const offset = (page - 1) * limit;
 

@@ -1,7 +1,7 @@
 const db = require('../models');
 
-const seedSchoolCentre = async () => {
-    const schoolCentres = [
+const seedPartner = async () => {
+    const partners = [
         {
             nama: "SDK Penabur 1",
             jenis: "Sekolah",
@@ -28,8 +28,8 @@ const seedSchoolCentre = async () => {
         },
     ]
 
-    await db.schoolCentre.bulkCreate(schoolCentres);
+    await db.partner.bulkCreate(partners);
     console.log("School centres have been seeded successfully.");
 }
 
-module.exports = seedSchoolCentre;
+module.exports = seedPartner;

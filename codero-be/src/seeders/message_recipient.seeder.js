@@ -13,6 +13,46 @@ const seedMessageRecipients = async () => {
             id_penerima: 1, // Another recipient's ID
             status: "Belum Dibaca",
         },
+        {
+            id_message: 3, // Another message's ID
+            id_penerima: 1, // Another recipient's ID
+            status: "Belum Dibaca",
+        },
+        {
+            id_message: 4, // Another message's ID
+            id_penerima: 1, // Another recipient's ID
+            status: "Belum Dibaca",
+        },
+        {
+            id_message: 5, // Another message's ID
+            id_penerima: 1, // Another recipient's ID
+            status: "Belum Dibaca",
+        },
+        {
+            id_message: 6, // Another message's ID
+            id_penerima: 1, // Another recipient's ID
+            status: "Belum Dibaca",
+        },
+        {
+            id_message: 7, // Another message's ID
+            id_penerima: 1, // Another recipient's ID
+            status: "Belum Dibaca",
+        },
+        {
+            id_message: 8, // Another message's ID
+            id_penerima: 1, // Another recipient's ID
+            status: "Belum Dibaca",
+        },
+        {
+            id_message: 9, // Another message's ID
+            id_penerima: 1, // Another recipient's ID
+            status: "Belum Dibaca",
+        },
+        {
+            id_message: 10, // Another message's ID
+            id_penerima: 1, // Another recipient's ID
+            status: "Belum Dibaca",
+        },
     ];
 
     await db.messageRecipient.bulkCreate(messageRecipients);

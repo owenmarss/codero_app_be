@@ -1,12 +1,12 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize, Sequelize) => {
-    const SchoolCentre = sequelize.define("schoolCentre", {
+    const Partner = sequelize.define("partner", {
         nama: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        jenis: {
+        jenis_partner: {
             type: DataTypes.ENUM('Sekolah', 'Centre'),
             allowNull: false,
         },
@@ -37,5 +37,5 @@ module.exports = (sequelize, Sequelize) => {
         },
     });
 
-    return SchoolCentre;
+    return Partner;
 };

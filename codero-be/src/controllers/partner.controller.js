@@ -1,6 +1,5 @@
-const e = require("express");
 const db = require("../models");
-const SchoolCentre = db.schoolCentre;
+const Partner = db.partner;
 const Materi = db.materi;
 const Op = db.Sequelize.Op;
 
@@ -14,7 +13,7 @@ exports.create = (req, res) => {
     //     });
     // }
 
-    // const schoolCentre = {
+    // const Partner = {
     //     nama: req.body.data.nama,
     //     jenis: req.body.data.jenis,
     //     alamat: req.body.data.alamat,
@@ -33,7 +32,7 @@ exports.create = (req, res) => {
         });
     }
 
-    SchoolCentre.create({
+    Partner.create({
         nama: nama,
         jenis: jenis,
         alamat: alamat,
@@ -100,14 +99,14 @@ exports.findAll = (req, res) => {
         orderCondition = [[sort, order.toUpperCase()]];
     }
 
-    SchoolCentre.findAll({
+    Partner.findAll({
         where: condition,
         order: orderCondition,
         include: [
             {
                 model: Materi,
                 as: "materi",
-                attributes: ["id", "judul_materi"],
+                attributes: ["id", "judul_materi", "jenis_materi"],
             },
         ],
     })
@@ -126,12 +125,12 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    SchoolCentre.findByPk(id, {
+    Partner.findByPk(id, {
         include: [
             {
                 model: Materi,
                 as: "materi",
-                attributes: ["id", "judul_materi"],
+                attributes: ["id", "judul_materi", "jenis_materi"],
             },
         ],
     })
@@ -172,7 +171,7 @@ exports.update = (req, res) => {
         });
     }
 
-    SchoolCentre.update(
+    Partner.update(
         {
             nama: nama,
             jenis: jenis,
@@ -201,7 +200,7 @@ exports.update = (req, res) => {
         });
     });
 
-    // SchoolCentre.update(req.body, {
+    // Partner.update(req.body, {
     //     where: { id: id },
     // })
     //     .then((num) => {
@@ -225,7 +224,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    SchoolCentre.destroy({
+    Partner.destroy({
         where: { id: id },
     })
         .then((num) => {
@@ -247,7 +246,7 @@ exports.delete = (req, res) => {
 };
 
 exports.deleteAll = (req, res) => {
-    SchoolCentre.destroy({
+    Partner.destroy({
         where: {},
         truncate: false,
     })
