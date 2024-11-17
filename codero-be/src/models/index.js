@@ -60,24 +60,26 @@ db.student.hasMany(db.schedule, { foreignKey: 'student_id', as: 'schedules' });
 
 
 //* User - Schedule relationship via user_schedule
-db.user.hasMany(db.userSchedule, { foreignKey: 'user_id', as: 'userSchedule' });
-db.userSchedule.belongsTo(db.user, { foreignKey: 'user_id',  as: 'user' });
+// ? One-to-Many relationship
+// db.user.hasMany(db.userSchedule, { foreignKey: 'user_id', as: 'userSchedule' });
+// db.userSchedule.belongsTo(db.user, { foreignKey: 'user_id',  as: 'user' });
 
-db.schedule.hasMany(db.userSchedule, { foreignKey: 'schedule_id', as: 'userSchedule' });
-db.userSchedule.belongsTo(db.schedule, { foreignKey: 'schedule_id', as: 'schedule' });
+// db.schedule.hasMany(db.userSchedule, { foreignKey: 'schedule_id', as: 'userSchedule' });
+// db.userSchedule.belongsTo(db.schedule, { foreignKey: 'schedule_id', as: 'schedule' });
 
-// db.user.belongsToMany(db.schedule, {
-//     through: db.userSchedule,
-//     foreignKey: 'user_id',
-//     otherKey: 'schedule_id',
-//     as: 'schedules'
-// });
-// db.schedule.belongsToMany(db.user, {
-//     through: db.userSchedule,
-//     foreignKey: 'schedule_id',
-//     otherKey: 'user_id',
-//     as: 'users'
-// });
+// ? Many-to-Many relationship
+db.user.belongsToMany(db.schedule, {
+    through: db.userSchedule,
+    foreignKey: 'user_id',
+    otherKey: 'schedule_id',
+    as: 'schedules'
+});
+db.schedule.belongsToMany(db.user, {
+    through: db.userSchedule,
+    foreignKey: 'schedule_id',
+    otherKey: 'user_id',
+    as: 'users'
+});
 
 
 //* Materi - Pertemuan relationship
