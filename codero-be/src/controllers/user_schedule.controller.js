@@ -81,9 +81,9 @@ exports.findAll = async (req, res) => {
             },
         ],
     })
-        .then((user_schedule) => {
-            console.log("user_schedule : ", user_schedule);
-            res.status(200).send(user_schedule);
+        .then((data) => {
+            console.log("user_schedule : ", data);
+            res.status(200).send(data);
         })
         .catch((err) => {
             console.log("Error banget : ", err);
@@ -114,7 +114,7 @@ exports.findOne = (req, res) => {
         ],
     })
         .then((data) => {
-            res.send(data);
+            res.status(200).send(data);
         })
         .catch((err) => {
             res.status(500).send({
@@ -125,12 +125,8 @@ exports.findOne = (req, res) => {
 
 // Find all UserSchedule with an user_id
 exports.findByUser = (req, res) => {   
-    const user_id = parseInt(req.query.user_id) || 0;
-    console.log("");
-    console.log("");
-    console.log("user_id : ", user_id);
-    console.log("");
-    console.log("");
+    const user_id = parseInt(req.query.user_id);
+    // console.log("user_id : ", user_id);
 
     UserSchedule.findAll({
         where: {
@@ -150,13 +146,16 @@ exports.findByUser = (req, res) => {
         ],
     })
         .then((data) => {
-            console.log(" ");
-            console.log(" ");
-            console.log(" ");
-            console.log(user_id);
-            console.log(" ");
-            console.log(" ");
-            console.log(" ");
+            // if(data.length === 0) {
+            //     res.status(404).send({
+            //         message: "UserSchedule not found!",
+            //     });
+            // }
+            if (data.length === 0 || !data) {
+                return res.status(404).send({
+                    message: "The user(s) is / are not found!",
+                });
+            }
             res.status(200).send(data);
         })
         .catch((err) => {
@@ -168,12 +167,8 @@ exports.findByUser = (req, res) => {
 
 // Find all UserSchedule with an schedule_id
 exports.findBySchedule = (req, res) => {
-    const schedule_id = req.query.schedule_id;
-    console.log("");
-    console.log("");
-    console.log("schedule_id : ", schedule_id);
-    console.log("");
-    console.log("");
+    const schedule_id = parseInt(req.query.schedule_id);
+    // console.log("schedule_id : ", schedule_id);
 
     UserSchedule.findAll({
         where: {
@@ -193,13 +188,16 @@ exports.findBySchedule = (req, res) => {
         ],
     })
         .then((data) => {
-            console.log(" ");
-            console.log(" ");
-            console.log(" ");
-            console.log(schedule_id);
-            console.log(" ");
-            console.log(" ");
-            console.log(" ");
+            // if(data.length === 0) {
+            //     res.status(404).send({
+            //         message: "UserSchedule not found!",
+            //     });
+            // }
+            if (data.length === 0 || !data) {
+                return res.status(404).send({
+                    message: "The schedule(s) is / are not found!",
+                });
+            }
             res.status(200).send(data);
         })
         .catch((err) => {
@@ -211,8 +209,8 @@ exports.findBySchedule = (req, res) => {
 
 // Find a single UserSchedule with an user_id and schedule_id
 exports.findOneByUserAndSchedule = (req, res) => {
-    const user_id = req.query.user_id;
-    const schedule_id = req.query.schedule_id;
+    const user_id = parseInt(req.query.user_id);
+    const schedule_id = parseInt(req.query.schedule_id);
 
     UserSchedule.findOne({
         where: {
@@ -233,12 +231,17 @@ exports.findOneByUserAndSchedule = (req, res) => {
         ],
     })
         .then((data) => {
-            if (!data) {
-                res.status(404).send({
-                    message: "UserSchedule not found!",
+            // if(data.length === 0) {
+            //     res.status(404).send({
+            //         message: "UserSchedule not found!",
+            //     });
+            // }
+            if (data.length === 0 || !data) {
+                return res.status(404).send({
+                    message: "The users and the schedules are not found!",
                 });
             }
-            res.send(data);
+            res.status(200).send(data);
         })
         .catch((err) => {
             res.status(500).send({
