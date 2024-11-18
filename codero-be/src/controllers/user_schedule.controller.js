@@ -209,6 +209,35 @@ exports.assignScheduleToUsers = async (req, res) => {
 //         });
 // };
 
+exports.getAllAssignedSchedules = async (req, res) => {
+    try {
+        const schedules = await Schedule.findAll({
+            include: [
+                {
+                    model: User,
+                    as: "users",
+                    attributes: ["id", "namaDepan", "namaBelakang", "posisi", "divisi", "cabang"],
+                    through: {
+                        attributes: [],
+                    }
+                }
+            ]
+        });
+
+        if(schedules.length === 0 || !schedules) {
+            return res.status(404).send({
+                message: "No schedules found!",
+            });
+        }
+
+        res.status(200).send(schedules);
+    } catch (err) {
+        res.status(500).send({
+            message: err.message || "Error retrieving UserSchedule"
+        });
+    }
+}
+
 // Find all UserSchedule with an user_id
 exports.findByUser =  async (req, res) => {
     const user_id = req.params.id;

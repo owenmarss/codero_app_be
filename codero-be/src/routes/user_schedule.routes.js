@@ -9,6 +9,9 @@ const checkPosisi = require('../middlewares/role.middleware.js');
 // ? Many-to-Many relationship routes
 router.post('/assign', authMiddleware, user_schedule.assignScheduleToUsers);
 
+// ? Get all assigned schedules
+router.get('/assigned-schedules', authMiddleware, user_schedule.getAllAssignedSchedules); 
+
 // ? Get all schedules by user
 router.get('/by-user/:id', authMiddleware, user_schedule.findByUser);
 
