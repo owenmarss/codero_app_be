@@ -8,6 +8,8 @@ const seedPartner = require("./partner.seeder"); // Path to partner seeder
 const seedStudent = require("./student.seeder") // Path to student seeder
 const seedSchedule = require("./schedule.seeder") // Path to schedule seeder
 const seedUserSchedule = require("./user_schedule.seeder") // Path to user_schedule seeder
+const seedPresensi = require("./presensi.seeder") // Path to presensi seeder
+const seedPayroll = require("./payroll.seeder") // Path to payroll seeder
 
 const seedAll = async () => {
     try {
@@ -41,6 +43,12 @@ const seedAll = async () => {
 
         //* Seed user schedules
         await seedUserSchedule();
+
+        //* Seed presensi
+        await seedPresensi();
+
+        //* Seed payrolls
+        await seedPayroll();
 
         console.log("All data seeded successfully.");
     } catch (error) {

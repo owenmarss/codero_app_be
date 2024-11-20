@@ -12,7 +12,7 @@ exports.create = (req, res) => {
         !req.body.email ||
         !req.body.password ||
         !req.body.posisi ||
-        !req.body.divisi ||
+        !req.body.jam_kerja ||
         !req.body.cabang
     ) {
         return res.status(400).send({
@@ -32,7 +32,7 @@ exports.create = (req, res) => {
         kota: req.body.kota,
         password: req.body.password,
         posisi: req.body.posisi,
-        divisi: req.body.divisi,
+        divisi: req.body.jam_kerja,
         cabang: req.body.cabang,
     };
 
@@ -55,7 +55,7 @@ exports.findAll = (req, res) => {
         namaBelakang,
         email,
         posisi,
-        divisi,
+        jam_kerja,
         cabang,
         sort,
         order = "ASC",
@@ -90,7 +90,7 @@ exports.findAll = (req, res) => {
             condition.posisi = { [Op.like]: `%${posisi}%` };
         }
         if (divisi) {
-            condition.divisi = { [Op.like]: `%${divisi}%` };
+            condition.jam_kerja = { [Op.like]: `%${jam_kerja}%` };
         }
         if (cabang) {
             condition.cabang = { [Op.like]: `%${cabang}%` };
@@ -186,7 +186,7 @@ exports.updateUserDetails = (req, res) => {
         alamat,
         kota,
         posisi,
-        divisi,
+        jam_kerja,
         cabang,
     } = req.body;
 
@@ -206,7 +206,7 @@ exports.updateUserDetails = (req, res) => {
     if (alamat) updateData.alamat = alamat;
     if (kota) updateData.kota = kota;
     if (posisi) updateData.posisi = posisi;
-    if (divisi) updateData.divisi = divisi;
+    if (jam_kerja) updateData.jam_kerja = jam_kerja;
     if (cabang) updateData.cabang = cabang;
 
     User.update(updateData, {
@@ -322,7 +322,7 @@ exports.register = (req, res) => {
         !req.body.data.email ||
         !req.body.data.password ||
         !req.body.data.posisi ||
-        !req.body.data.divisi ||
+        !req.body.data.jam_kerja ||
         !req.body.data.cabang
     ) {
         return res.status(400).send({
@@ -352,7 +352,7 @@ exports.register = (req, res) => {
                     kota: req.body.data.kota,
                     password: bcrypt.hashSync(req.body.data.password, 8),
                     posisi: req.body.data.posisi,
-                    divisi: req.body.data.divisi,
+                    jam_kerja: req.body.data.jam_kerja,
                     cabang: req.body.data.cabang,
                 };
 

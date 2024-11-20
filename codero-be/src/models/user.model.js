@@ -50,9 +50,9 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        divisi: {
-            type: Sequelize.STRING,
-            allowNull: false,            
+        jam_kerja: {
+            type: Sequelize.ENUM('Full-Time', 'Part-Time', 'Internship'),
+            allowNull: false,
         },
         cabang: {
             type: Sequelize.STRING,

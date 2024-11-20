@@ -30,6 +30,8 @@ db.sequelize = sequelize;
 db.user = require("./user.model.js")(sequelize, Sequelize);
 db.schedule = require("./schedule.model.js")(sequelize, Sequelize);
 db.userSchedule = require("./user_schedule.model.js")(sequelize, Sequelize);
+db.presensi = require("./presensi.model.js")(sequelize, Sequelize);
+db.payroll = require("./payroll.model.js")(sequelize, Sequelize);
 db.partner = require("./partner.model.js")(sequelize, Sequelize);
 db.student = require("./student.model.js")(sequelize, Sequelize);
 db.materi = require("./materi.model.js")(sequelize, Sequelize);
@@ -82,6 +84,21 @@ db.schedule.belongsToMany(db.user, {
 });
 
 
+//* UserSchedule - Presensi relationship
+db.userSchedule.hasMany(db.presensi, { foreignKey: 'user_schedule_id', as: 'presensi'} );
+db.presensi.belongsTo(db.userSchedule, {foreignKey: 'user_schedule_id', as: 'userSchedule'});
+
+
+//* UserSchedule - User & Schedule (Many-to-One)
+db.userSchedule.belongsTo(db.user, { foreignKey: "user_id", as: "users" });
+db.userSchedule.belongsTo(db.schedule, { foreignKey: "schedule_id", as: "schedules" });
+
+
+//* Presensi - Payroll relationship
+db.payroll.hasMany(db.presensi, { foreignKey: 'payroll_id', as: 'presensi' });
+db.presensi.belongsTo(db.payroll, { foreignKey: 'payroll_id', as: 'payroll' });
+
+
 //* Materi - Pertemuan relationship
 db.materi.hasMany(db.pertemuan, { foreignKey: 'id_materi', as: 'pertemuan' });
 db.pertemuan.belongsTo(db.materi, { foreignKey: 'id_materi', as: 'materi' });
@@ -96,6 +113,14 @@ db.messageRecipient.belongsTo(db.message, { foreignKey: 'id_message' });
 
 db.user.hasMany(db.messageRecipient, { foreignKey: 'id_penerima', onDelete: 'CASCADE', as: 'penerima' });
 db.messageRecipient.belongsTo(db.user, { foreignKey: 'id_penerima', as: 'penerima' });
+
+
+// Console log
+// index.js (or equivalent)
+console.log("User Associations:", db.user.associations);
+console.log("Schedule Associations:", db.schedule.associations);
+console.log("UserSchedule Associations:", db.userSchedule.associations);
+console.log("Presensi Associations:", db.presensi.associations);
 
 
 
