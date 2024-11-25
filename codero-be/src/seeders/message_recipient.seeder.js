@@ -5,52 +5,52 @@ const seedMessageRecipients = async () => {
     const messageRecipients = [
         {
             id_message: 1, // ID of the message from the `messages` table
-            id_penerima: 2, // ID of the recipient from the `users` table
+            id_recipient: 2, // ID of the recipient from the `users` table
             status: "Belum Dibaca",
         },
         {
             id_message: 2, // Another message's ID
-            id_penerima: 1, // Another recipient's ID
+            id_recipient: 1, // Another recipient's ID
             status: "Belum Dibaca",
         },
         {
             id_message: 3, // Another message's ID
-            id_penerima: 1, // Another recipient's ID
+            id_recipient: 1, // Another recipient's ID
             status: "Belum Dibaca",
         },
         {
             id_message: 4, // Another message's ID
-            id_penerima: 1, // Another recipient's ID
+            id_recipient: 1, // Another recipient's ID
             status: "Belum Dibaca",
         },
         {
             id_message: 5, // Another message's ID
-            id_penerima: 1, // Another recipient's ID
+            id_recipient: 1, // Another recipient's ID
             status: "Belum Dibaca",
         },
         {
             id_message: 6, // Another message's ID
-            id_penerima: 1, // Another recipient's ID
+            id_recipient: 1, // Another recipient's ID
             status: "Belum Dibaca",
         },
         {
             id_message: 7, // Another message's ID
-            id_penerima: 1, // Another recipient's ID
+            id_recipient: 1, // Another recipient's ID
             status: "Belum Dibaca",
         },
         {
             id_message: 8, // Another message's ID
-            id_penerima: 1, // Another recipient's ID
+            id_recipient: 1, // Another recipient's ID
             status: "Belum Dibaca",
         },
         {
             id_message: 9, // Another message's ID
-            id_penerima: 1, // Another recipient's ID
+            id_recipient: 1, // Another recipient's ID
             status: "Belum Dibaca",
         },
         {
             id_message: 10, // Another message's ID
-            id_penerima: 1, // Another recipient's ID
+            id_recipient: 1, // Another recipient's ID
             status: "Belum Dibaca",
         },
     ];

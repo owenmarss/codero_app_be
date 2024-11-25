@@ -2,23 +2,23 @@ const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize, Sequelize) => {
     const User = sequelize.define("user", {
-        userId: {
+        employee_id: {
             type: Sequelize.STRING,
             allowNull: true,
         },
-        namaDepan: {
+        first_name: {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        namaBelakang: {
+        last_name: {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        jenisKelamin: {
+        gender: {
             type: Sequelize.ENUM('Laki-laki', 'Perempuan'),
             allowNull: true,
         },
-        tanggalLahir: {
+        birth_date: {
             type: DataTypes.DATEONLY,
             allowNull: true,
         },
@@ -26,15 +26,15 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        noTelp: {
+        phone: {
             type: Sequelize.STRING,
             allowNull: true,
         },
-        alamat: {
+        address: {
             type: Sequelize.STRING,
             allowNull: true,
         },
-        kota: {
+        city: {
             type: Sequelize.STRING,
             allowNull: true,
         },
@@ -46,18 +46,30 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: true,
         },
-        posisi: {
+        position: {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        jam_kerja: {
+        working_hour: {
             type: Sequelize.ENUM('Full-Time', 'Part-Time', 'Internship'),
             allowNull: false,
         },
-        cabang: {
+        branch: {
             type: Sequelize.STRING,
             allowNull: false,                        
-        }
+        },
+        npwp: {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+        },
+        bank: {
+            type: Sequelize.ENUM('Mandiri', 'BCA'),
+            allowNull: true,
+        },
+        account_number: {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+        },
     });
 
     return User;

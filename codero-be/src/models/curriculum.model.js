@@ -1,12 +1,12 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize, Sequelize) => {
-    const Materi = sequelize.define("materi", {
-        judul_materi: {
+    const Curriculum = sequelize.define("curriculum", {
+        curriculum_title: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        jenis_materi: {
+        curriculum_type: {
             type: DataTypes.ENUM('Coding', 'Robotic'),
             allowNull: false,
         },
@@ -14,11 +14,11 @@ module.exports = (sequelize, Sequelize) => {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        jumlah_pertemuan: {
+        total_session: {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
     });
 
-    return Materi;
+    return Curriculum;
 }

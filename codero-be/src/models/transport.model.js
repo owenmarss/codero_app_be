@@ -2,14 +2,18 @@ const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize, Sequelize) => {
     const Transport = sequelize.define("transport", {
-        presensi_id: {
+        attendance_id: {
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
-                model: 'presensis',
+                model: 'attendances',
                 key: 'id'
             },
             onDelete: 'CASCADE',
+        },
+        type: {
+            type: DataTypes.ENUM('Public', 'Private'),
+            allowNull: true,
         },
         reimbursement_id: {
             type: DataTypes.INTEGER,
@@ -20,10 +24,6 @@ module.exports = (sequelize, Sequelize) => {
             },
             onDelete: 'SET NULL',
         },
-        transport_type: {
-            type: DataTypes.ENUM('Public', 'Private'),
-            allowNull: true,
-        }
     });
 
     return Transport;

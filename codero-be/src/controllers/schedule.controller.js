@@ -2,38 +2,38 @@ const db = require("../models");
 const Schedule = db.schedule;
 const Partner = db.partner;
 const Student = db.student;
-const Materi = db.materi;
+const Curriculum = db.curriculum;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Schedule
 exports.create = (req, res) => {
     const {
-        jenis_client,
-        jenis_sesi,
-        jenis_kegiatan,
-        hari,
-        tanggal,
-        jam_mulai,
-        jam_selesai,
+        client_type,
+        session_type,
+        activity,
+        day,
+        date,
+        start_time,
+        finish_time,
         partner_id,
         student_id,
         status,
     } = req.body.data;
 
-    if (!jenis_client || !jenis_sesi || !jenis_kegiatan || !hari || !tanggal || !jam_mulai || !jam_selesai || !status) {
+    if (!client_type || !session_type || !activity || !day || !date || !start_time || !finish_time || !status) {
         return res.status(400).send({
             message: "Content can not be empty!",
         });
     }
 
     Schedule.create({
-        jenis_client: jenis_client,
-        jenis_sesi: jenis_sesi,
-        jenis_kegiatan: jenis_kegiatan,
-        hari: hari,
-        tanggal: tanggal,
-        jam_mulai: jam_mulai,
-        jam_selesai: jam_selesai,
+        client_type: client_type,
+        session_type: session_type,
+        activity: activity,
+        day: day,
+        date: date,
+        start_time: start_time,
+        finish_time: finish_time,
         partner_id: partner_id,
         student_id: student_id,
         status: status
@@ -52,7 +52,7 @@ exports.create = (req, res) => {
 
 // Retrieve all Schedules from the database.
 exports.findAll = (req, res) => {
-    const { jenis_client, jenis_sesi, jenis_kegiatan, hari, tanggal, jam_mulai, jam_selesai, partner_id, student_id, status, sort, order = "ASC", and, or } = req.query;
+    const { client_type, session_type, activity, day, date, start_time, finish_time, partner_id, student_id, status, sort, order = "ASC", and, or } = req.query;
     let condition = {};
 
     if (and) {
@@ -68,26 +68,26 @@ exports.findAll = (req, res) => {
         });
         condition = { [Op.or]: orConditions };
     } else {
-        if (jenis_client) {
-            condition.jenis_client = { [Op.like]: `%${jenis_client}%` };
+        if (client_type) {
+            condition.client_type = { [Op.like]: `%${client_type}%` };
         }
-        if (jenis_sesi) {
-            condition.jenis_sesi = { [Op.like]: `%${jenis_sesi}%` };
+        if (session_type) {
+            condition.session_type = { [Op.like]: `%${session_type}%` };
         }
-        if (jenis_kegiatan) {
-            condition.jenis_kegiatan = { [Op.like]: `%${jenis_kegiatan}%` };
+        if (activity) {
+            condition.activity = { [Op.like]: `%${activity}%` };
         }
-        if (hari) {
-            condition.hari = { [Op.like]: `%${hari}%` };
+        if (day) {
+            condition.day = { [Op.like]: `%${day}%` };
         }
-        if (tanggal) {
-            condition.tanggal = { [Op.like]: `%${tanggal}%` };
+        if (date) {
+            condition.date = { [Op.like]: `%${date}%` };
         }
-        if (jam_mulai) {
-            condition.jam_mulai = { [Op.like]: `%${jam_mulai}%` };
+        if (start_time) {
+            condition.start_time = { [Op.like]: `%${start_time}%` };
         }
-        if (jam_selesai) {
-            condition.jam_selesai = { [Op.like]: `%${jam_selesai}%` };
+        if (finish_time) {
+            condition.finish_time = { [Op.like]: `%${finish_time}%` };
         }
         if (partner_id) {
             condition.partner_id = partner_id;
@@ -112,24 +112,24 @@ exports.findAll = (req, res) => {
             {
                 model: Partner,
                 as: "partner",
-                attributes: ["id", "nama", "id_materi"],
+                attributes: ["id", "name", "id_curriculum"],
                 include: [
                     {
-                        model: Materi,
-                        as: "materi",
-                        attributes: ["id", "judul_materi", "jenis_materi"],
+                        model: Curriculum,
+                        as: "curriculum",
+                        attributes: ["id", "curriculum_title", "curriculum_type"],
                     },
                 ]
             },
             {
                 model: Student,
                 as: "student",
-                attributes: ["id", "nama", "id_materi"],
+                attributes: ["id", "name", "id_curriculum"],
                 include: [
                     {
-                        model: Materi,
-                        as: "materi",
-                        attributes: ["id", "judul_materi", "jenis_materi"],
+                        model: Curriculum,
+                        as: "curriculum",
+                        attributes: ["id", "curriculum_title", "curriculum_type"],
                     },
                 ]
             },
@@ -155,24 +155,24 @@ exports.findOne = (req, res) => {
             {
                 model: Partner,
                 as: "partner",
-                attributes: ["id", "nama"],
+                attributes: ["id", "name"],
                 include: [
                     {
-                        model: Materi,
-                        as: "materi",
-                        attributes: ["id", "judul_materi", "jenis_materi"],
+                        model: Curriculum,
+                        as: "curriculum",
+                        attributes: ["id", "curriculum_title", "curriculum_type"],
                     },
                 ]
             },
             {
                 model: Student,
                 as: "student",
-                attributes: ["id", "nama"],
+                attributes: ["id", "name"],
                 include: [
                     {
-                        model: Materi,
-                        as: "materi",
-                        attributes: ["id", "judul_materi", "jenis_materi"],
+                        model: Curriculum,
+                        as: "curriculum",
+                        attributes: ["id", "curriculum_title", "curriculum_type"],
                     },
                 ]
             },
@@ -196,22 +196,22 @@ exports.findOne = (req, res) => {
 // Update a Schedule by the id in the request
 exports.update = (req, res) => {
     const id = req.params.id;
-    const { jenis_client, jenis_sesi, jenis_kegiatan, hari, tanggal, jam_mulai, jam_selesai, partner_id, student_id, status } = req.body.data;
+    const { client_type, session_type, activity, day, date, start_time, finish_time, partner_id, student_id, status } = req.body.data;
 
-    if(!jenis_client || !jenis_sesi || !jenis_kegiatan || !hari || !tanggal || !jam_mulai || !jam_selesai || !status) {
+    if(!client_type || !session_type || !activity || !day || !date || !start_time || !finish_time || !status) {
         return res.status(400).send({
             message: "Content can not be empty!",
         });
     }
 
     Schedule.update({
-        jenis_client: jenis_client,
-        jenis_sesi: jenis_sesi,
-        jenis_kegiatan: jenis_kegiatan,
-        hari: hari,
-        tanggal: tanggal,
-        jam_mulai: jam_mulai,
-        jam_selesai: jam_selesai,
+        client_type: client_type,
+        session_type: session_type,
+        activity: activity,
+        day: day,
+        date: date,
+        start_time: start_time,
+        finish_time: finish_time,
         partner_id: partner_id,
         student_id: student_id,
         status: status

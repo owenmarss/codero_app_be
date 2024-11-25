@@ -1,27 +1,27 @@
 const db = require("../models");
 const Student = db.student;
-const Materi = db.materi;
+const Curriculum = db.curriculum;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Student
 exports.create = (req, res) => {
     const {
-        nama,
-        tempat_lahir,
-        tanggal_lahir,
-        umur,
-        jenjang,
-        kelas,
-        alamat,
-        nama_sekolah,
-        nama_ortu,
-        no_telp_ortu,
-        no_telp_anak,
-        id_materi,
+        name,
+        birth_place,
+        birth_date,
+        age,
+        level,
+        grade,
+        address,
+        school_name,
+        parent_name,
+        parent_phone,
+        student_phone,
+        id_curriculum,
     } = req.body.data;
 
     // Validate request
-    if (!nama) {
+    if (!name) {
         return res.status(400).send({
             message: "Content can not be empty!",
         });
@@ -29,25 +29,25 @@ exports.create = (req, res) => {
 
     // Create a Student
     Student.create({
-        nama: nama,
-        tempat_lahir: tempat_lahir,
-        tanggal_lahir: tanggal_lahir,
-        umur: umur,
-        jenjang: jenjang,
-        kelas: kelas,
-        alamat: alamat,
-        nama_sekolah: nama_sekolah,
-        nama_ortu: nama_ortu,
-        no_telp_ortu: no_telp_ortu,
-        no_telp_anak: no_telp_anak,
-        id_materi: id_materi,
+        name: name,
+        birth_place: birth_place,
+        birth_date: birth_date,
+        age: age,
+        level: level,
+        grade: grade,
+        address: address,
+        school_name: school_name,
+        parent_name: parent_name,
+        parent_phone: parent_phone,
+        student_phone: student_phone,
+        id_curriculum: id_curriculum,
     })
         .then((data) => {
             res.status(200).send(data);
         })
         .catch((err) => {
             res.status(500).send({
-                message:
+                messS:
                     err.message ||
                     "Some error occurred while creating the Student.",
             });
@@ -57,18 +57,18 @@ exports.create = (req, res) => {
 // Retrieve all Students from the database.
 exports.findAll = (req, res) => {
     const {
-        nama,
-        tempat_lahir,
-        tanggal_lahir,
-        umur,
-        jenjang,
-        kelas,
-        alamat,
-        nama_sekolah,
-        nama_ortu,
-        no_telp_ortu,
-        no_telp_anak,
-        id_materi,
+        name,
+        birth_place,
+        birth_date,
+        age,
+        level,
+        grade,
+        address,
+        school_name,
+        parent_name,
+        parent_phone,
+        student_phone,
+        id_curriculum,
         sort,
         order = "ASC",
         and,
@@ -89,41 +89,41 @@ exports.findAll = (req, res) => {
         });
         condition = { [Op.or]: orConditions };
     } else {
-        if (nama) {
-            condition.nama = { [Op.like]: `%${nama}%` };
+        if (name) {
+            condition.name = { [Op.like]: `%${name}%` };
         }
-        if (tempat_lahir) {
-            condition.tempat_lahir = { [Op.like]: `%${tempat_lahir}%` };
+        if (birth_place) {
+            condition.birth_place = { [Op.like]: `%${birth_place}%` };
         }
-        if (tanggal_lahir) {
-            condition.tanggal_lahir = { [Op.like]: `%${tanggal_lahir}%` };
+        if (birth_date) {
+            condition.birth_date = { [Op.like]: `%${birth_date}%` };
         }
-        if (umur) {
-            condition.umur = { [Op.like]: `%${umur}%` };
+        if (S) {
+            condition.S = { [Op.like]: `%${S}%` };
         }
-        if (jenjang) {
-            condition.jenjang = { [Op.like]: `%${jenjang}%` };
+        if (level) {
+            condition.level = { [Op.like]: `%${level}%` };
         }
-        if (kelas) {
-            condition.kelas = { [Op.like]: `%${kelas}%` };
+        if (grade) {
+            condition.grade = { [Op.like]: `%${grade}%` };
         }
-        if (alamat) {
-            condition.alamat = { [Op.like]: `%${alamat}%` };
+        if (address) {
+            condition.address = { [Op.like]: `%${address}%` };
         }
-        if (nama_sekolah) {
-            condition.nama_sekolah = { [Op.like]: `%${nama_sekolah}%` };
+        if (school_name) {
+            condition.school_name = { [Op.like]: `%${school_name}%` };
         }
-        if (nama_ortu) {
-            condition.nama_ortu = { [Op.like]: `%${nama_ortu}%` };
+        if (parent_name) {
+            condition.parent_name = { [Op.like]: `%${parent_name}%` };
         }
-        if (no_telp_ortu) {
-            condition.no_telp_ortu = { [Op.like]: `%${no_telp_ortu}%` };
+        if (parent_phone) {
+            condition.parent_phone = { [Op.like]: `%${parent_phone}%` };
         }
-        if (no_telp_anak) {
-            condition.no_telp_anak = { [Op.like]: `%${no_telp_anak}%` };
+        if (student_phone) {
+            condition.student_phone = { [Op.like]: `%${student_phone}%` };
         }
-        if (id_materi) {
-            condition.id_materi = id_materi;
+        if (id_curriculum) {
+            condition.id_curriculum = id_curriculum;
         }
     }
 
@@ -137,9 +137,9 @@ exports.findAll = (req, res) => {
         order: orderCondition,
         include: [
             {
-                model: Materi,
-                as: "materi",
-                attributes: ["id", "judul_materi"],
+                model: Curriculum,
+                as: "curriculum",
+                attributes: ["id", "curriculum_title"],
             },
         ],
     })
@@ -148,7 +148,7 @@ exports.findAll = (req, res) => {
         })
         .catch((err) => {
             res.status(500).send({
-                message:
+                messS:
                     err.message ||
                     "Some error occurred while retrieving students.",
             });
@@ -162,9 +162,9 @@ exports.findOne = (req, res) => {
     Student.findByPk(id, {
         include: [
             {
-                model: Materi,
-                as: "materi",
-                attributes: ["id", "judul_materi"],
+                model: Curriculum,
+                as: "curriculum",
+                attributes: ["id", "curriculum_title"],
             },
         ],
     })
@@ -188,22 +188,22 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
     const id = req.params.id;
     const {
-        nama,
-        tempat_lahir,
-        tanggal_lahir,
-        umur,
-        jenjang,
-        kelas,
-        alamat,
-        nama_sekolah,
-        nama_ortu,
-        no_telp_ortu,
-        no_telp_anak,
-        id_materi,
+        name,
+        birth_place,
+        birth_date,
+        age,
+        level,
+        grade,
+        address,
+        school_name,
+        parent_name,
+        parent_phone,
+        student_phone,
+        id_curriculum,
     } = req.body.data;
 
     // Validate request
-    if (!nama) {
+    if (!name) {
         return res.status(400).send({
             message: "Content can not be empty!",
         });
@@ -211,18 +211,18 @@ exports.update = (req, res) => {
 
     Student.update(
         {
-            nama: nama,
-            tempat_lahir: tempat_lahir,
-            tanggal_lahir: tanggal_lahir,
-            umur: umur,
-            jenjang: jenjang,
-            kelas: kelas,
-            alamat: alamat,
-            nama_sekolah: nama_sekolah,
-            nama_ortu: nama_ortu,
-            no_telp_ortu: no_telp_ortu,
-            no_telp_anak: no_telp_anak,
-            id_materi: id_materi,
+            name: name,
+            birth_place: birth_place,
+            birth_date: birth_date,
+            age: age,
+            level: level,
+            grade: grade,
+            address: address,
+            school_name: school_name,
+            parent_name: parent_name,
+            parent_phone: parent_phone,
+            student_phone: student_phone,
+            id_curriculum: id_curriculum,
         },
         { where: { id: id } }
     )

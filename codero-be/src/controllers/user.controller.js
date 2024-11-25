@@ -7,13 +7,13 @@ const { generateToken, verifyToken } = require("../utils/jwt.utils");
 // Create and Save a new User
 exports.create = (req, res) => {
     if (
-        !req.body.namaDepan ||
-        !req.body.namaBelakang ||
+        !req.body.first_name ||
+        !req.body.last_name ||
         !req.body.email ||
         !req.body.password ||
-        !req.body.posisi ||
-        !req.body.jam_kerja ||
-        !req.body.cabang
+        !req.body.position ||
+        !req.body.working_hour ||
+        !req.body.branch
     ) {
         return res.status(400).send({
             message: "Content can not be empty!",
@@ -21,19 +21,22 @@ exports.create = (req, res) => {
     }
 
     const user = {
-        userId: req.body.userId || null,
-        namaDepan: req.body.namaDepan,
-        namaBelakang: req.body.namaBelakang,
-        jenisKelamin: req.body.jenisKelamin,
-        tanggalLahir: req.body.tanggalLahir,
+        employee_id: req.body.employee_id || null,
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        gender: req.body.gender,
+        birth_date: req.body.birth_date,
         email: req.body.email,
-        noTelp: req.body.noTelp,
-        alamat: req.body.alamat,
-        kota: req.body.kota,
+        phone: req.body.phone,
+        address: req.body.address,
+        city: req.body.city,
         password: req.body.password,
-        posisi: req.body.posisi,
-        divisi: req.body.jam_kerja,
-        cabang: req.body.cabang,
+        position: req.body.position,
+        working_hour: req.body.working_hour,
+        branch: req.body.branch,
+        npwp: req.body.npwp || null,
+        bank: req.body.bank || null,
+        account_number: req.body.account_number || null,
     };
 
     User.create(user)
@@ -51,12 +54,15 @@ exports.create = (req, res) => {
 
 exports.findAll = (req, res) => {
     const {
-        namaDepan,
-        namaBelakang,
+        first_name,
+        last_name,
         email,
-        posisi,
-        jam_kerja,
-        cabang,
+        position,
+        working_hour,
+        branch,
+        npwp,
+        bank,
+        account_number,
         sort,
         order = "ASC",
         and,
@@ -77,23 +83,32 @@ exports.findAll = (req, res) => {
         });
         condition = { [Op.or]: orConditions };
     } else {
-        if (namaDepan) {
-            condition.namaDepan = { [Op.like]: `%${namaDepan}%` };
+        if (first_name) {
+            condition.first_name = { [Op.like]: `%${first_name}%` };
         }
-        if (namaBelakang) {
-            condition.namaBelakang = { [Op.like]: `%${namaBelakang}%` };
+        if (last_name) {
+            condition.last_name = { [Op.like]: `%${last_name}%` };
         }
         if (email) {
             condition.email = { [Op.like]: `%${email}%` };
         }
-        if (posisi) {
-            condition.posisi = { [Op.like]: `%${posisi}%` };
+        if (position) {
+            condition.position = { [Op.like]: `%${position}%` };
         }
-        if (divisi) {
-            condition.jam_kerja = { [Op.like]: `%${jam_kerja}%` };
+        if (working_hour) {
+            condition.working_hour = { [Op.like]: `%${working_hour}%` };
         }
-        if (cabang) {
-            condition.cabang = { [Op.like]: `%${cabang}%` };
+        if (branch) {
+            condition.branch = { [Op.like]: `%${branch}%` };
+        }
+        if (npwp) {
+            condition.npwp = { [Op.like]: `%${npwp}%` };
+        }
+        if (bank) {
+            condition.bank = { [Op.like]: `%${bank}%` };
+        }
+        if (account_number) {
+            condition.account_number = { [Op.like]: `%${account_number}%` };
         }
     }
 
@@ -177,37 +192,43 @@ exports.updatePassword = (req, res) => {
 exports.updateUserDetails = (req, res) => {
     const id = req.params.id;
     const {
-        namaDepan,
-        namaBelakang,
-        jenisKelamin,
-        tanggalLahir,
+        first_name,
+        last_name,
+        gender,
+        birth_date,
         email,
-        noTelp,
-        alamat,
-        kota,
-        posisi,
-        jam_kerja,
-        cabang,
+        phone,
+        address,
+        city,
+        position,
+        working_hour,
+        branch,
+        npwp,
+        bank,
+        account_number
     } = req.body;
 
-    // if (!namaDepan && !namaBelakang && !email) {
+    // if (!first_name && !last_name && !email) {
     //     return res.status(400).send({
     //         message: "At least one field (name or email) must be provided!",
     //     });
     // }
 
     const updateData = {};
-    if (namaDepan) updateData.namaDepan = namaDepan;
-    if (namaBelakang) updateData.namaBelakang = namaBelakang;
-    if (jenisKelamin) updateData.jenisKelamin = jenisKelamin;
-    if (tanggalLahir) updateData.tanggalLahir = tanggalLahir;
+    if (first_name) updateData.first_name = first_name;
+    if (last_name) updateData.last_name = last_name;
+    if (gender) updateData.gender = gender;
+    if (birth_date) updateData.birth_date = birth_date;
     if (email) updateData.email = email;
-    if (noTelp) updateData.noTelp = noTelp;
-    if (alamat) updateData.alamat = alamat;
-    if (kota) updateData.kota = kota;
-    if (posisi) updateData.posisi = posisi;
-    if (jam_kerja) updateData.jam_kerja = jam_kerja;
-    if (cabang) updateData.cabang = cabang;
+    if (phone) updateData.phone = phone;
+    if (address) updateData.address = address;
+    if (city) updateData.city = city;
+    if (position) updateData.position = position;
+    if (working_hour) updateData.working_hour = working_hour;
+    if (branch) updateData.branch = branch;
+    if (npwp) updateData.npwp = npwp;
+    if (bank) updateData.bank = bank;
+    if (account_number) updateData.account_number = account_number;
 
     User.update(updateData, {
         where: { id: id },
@@ -300,8 +321,8 @@ exports.login = (req, res) => {
 
             res.send({
                 id: user.id,
-                userId: user.userId,
-                posisi: user.posisi,
+                employee_id: user.employee_id,
+                position: user.position,
                 accessToken: token
             });
         })
@@ -317,13 +338,14 @@ exports.register = (req, res) => {
     
     // Check if all required fields are present
     if (
-        !req.body.data.namaDepan ||
-        !req.body.data.namaBelakang ||
+        !req.body.data.first_name ||
+        !req.body.data.last_name ||
         !req.body.data.email ||
         !req.body.data.password ||
-        !req.body.data.posisi ||
-        !req.body.data.jam_kerja ||
-        !req.body.data.cabang
+        !req.body.data.position ||
+        !req.body.data.working_hour ||
+        !req.body.data.branch 
+
     ) {
         return res.status(400).send({
             message: "Content can not be empty!",
@@ -341,19 +363,22 @@ exports.register = (req, res) => {
                 });
             } else {
                 const newUser = {
-                    userId: req.body.data.userId || null,
-                    namaDepan: req.body.data.namaDepan,
-                    namaBelakang: req.body.data.namaBelakang,
-                    jenisKelamin: req.body.data.jenisKelamin,
-                    tanggalLahir: req.body.data.tanggalLahir,
+                    employee_id: req.body.data.employee_id || null,
+                    first_name: req.body.data.first_name,
+                    last_name: req.body.data.last_name,
+                    gender: req.body.data.gender,
+                    birth_date: req.body.data.birth_date,
                     email: req.body.data.email,
-                    noTelp: req.body.data.noTelp,
-                    alamat: req.body.data.alamat,
-                    kota: req.body.data.kota,
+                    phone: req.body.data.phone,
+                    address: req.body.data.address,
+                    city: req.body.data.city,
                     password: bcrypt.hashSync(req.body.data.password, 8),
-                    posisi: req.body.data.posisi,
-                    jam_kerja: req.body.data.jam_kerja,
-                    cabang: req.body.data.cabang,
+                    position: req.body.data.position,
+                    working_hour: req.body.data.working_hour,
+                    branch: req.body.data.branch,
+                    npwp: req.body.data.npwp || null,
+                    bank: req.body.data.bank || null,
+                    account_number: req.body.data.account_number || null,
                 };
 
                 User.create(newUser)

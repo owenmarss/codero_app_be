@@ -11,7 +11,7 @@ module.exports = (sequelize, Sequelize) => {
             },
             onDelete: 'CASCADE'
         },
-        jumlah_perbehentian: {
+        total_stop: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },

@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const secretKey = 'coderoeducation121314';
 
 const generateToken = (user) => {
-    return jwt.sign({ id: user.id, role: user.posisi}, secretKey, {
+    return jwt.sign({ id: user.employee_id, role: user.position}, secretKey, {
         expiresIn: '24h', // Token expired in 24 hours
     });
 }

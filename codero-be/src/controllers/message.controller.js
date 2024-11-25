@@ -5,14 +5,13 @@ const MessageRecipient = db.messageRecipient;
 const User = db.user;
 const { verifyToken } = require("../utils/jwt.utils");
 
-
 // Create and Save a new Message
 exports.sendMessage = (req, res) => {
-    const { id_pengirim, subject, isi_pesan, recipients } = req.body.data;
+    const { id_sender, subject, content, recipients } = req.body.data;
     console.log(req.body.data);
 
     // Validate request
-    if (!id_pengirim || !subject || !isi_pesan || !recipients) {
+    if (!id_sender || !subject || !content || !recipients) {
         return res.status(400).send({
             message: "Content can not be empty!",
         });
@@ -20,17 +19,17 @@ exports.sendMessage = (req, res) => {
 
     // Create a Message
     Message.create({
-        id_pengirim: id_pengirim,
+        id_sender: id_sender,
         subject: subject,
-        isi_pesan: isi_pesan,
-        tanggal_dikirim: new Date().toISOString().split("T")[0],
-        waktu_dikirim: new Date().toTimeString().split(" ")[0],
+        content: content,
+        send_date: new Date().toISOString().split("T")[0],
+        send_time: new Date().toTimeString().split(" ")[0],
     })
         .then((message) => {
             const messageRecipients = recipients.map((recipient) => {
                 return {
                     id_message: message.id,
-                    id_penerima: recipient,
+                    id_recipient: recipient,
                     status: "Belum Dibaca",
                 };
             });
@@ -54,19 +53,18 @@ exports.getAllMessages = (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 6;
 
-    // console.log(req.query);
     
     // Calculate the offset
     const offset = (page - 1) * limit;
 
     MessageRecipient.findAndCountAll({
-        where: { id_penerima: user_id },
+        where: { id_recipient: user_id },
         include: {
             model: Message,
             include: {
                 model: User,
-                as: "pengirim",
-                attributes: ["namaDepan", "namaBelakang", "email"],
+                as: "sender",
+                attributes: ["first_name", "last_name", "email"],
             },
         },
         limit: limit,
@@ -108,16 +106,16 @@ exports.getMessageById = (req, res) => {
             include: [
                 {
                     model: User,
-                    as: "pengirim",
-                    attributes: ["namaDepan", "namaBelakang", "email"],
+                    as: "sender",
+                    attributes: ["first_name", "last_name", "email"],
                 },
                 {
                     model: MessageRecipient,
                     include: [
                         {
                             model: User,
-                            as: "penerima",
-                            attributes: ["namaDepan", "namaBelakang", "email"],
+                            as: "recipient",
+                            attributes: ["first_name", "last_name", "email"],
                         },
                     ],
                 },
@@ -149,13 +147,13 @@ exports.getUnreadMessages = (req, res) => {
     console.log(user_id);
 
     MessageRecipient.findAll({
-        where: { id_penerima: user_id, status: "Belum Dibaca" },
+        where: { id_recipient: user_id, status: "Belum Dibaca" },
         include: {
             model: Message,
             include: {
                 model: User,
-                as: "pengirim",
-                attributes: ["namaDepan", "namaBelakang", "email"],
+                as: "sender",
+                attributes: ["first_name", "last_name", "email"],
             },
         },
     }).then((messages) => {
@@ -174,13 +172,13 @@ exports.getReadMessages = (req, res) => {
     const user_id = req.params.id;
 
     MessageRecipient.findAll({
-        where: { id_penerima: user_id, status: "Dibaca" },
+        where: { id_recipient: user_id, status: "Dibaca" },
         include: {
             model: Message,
             include: {
                 model: User,
-                as: "pengirim",
-                attributes: ["namaDepan", "namaBelakang", "email"],
+                as: "sender",
+                attributes: ["first_name", "last_name", "email"],
             },
         },
     })
@@ -201,7 +199,7 @@ exports.deleteAllMessages = (req, res) => {
     const user_id = req.params.id;
 
     MessageRecipient.destroy({
-        where: { id_penerima: user_id },
+        where: { id_recipient: user_id },
     })
         .then(() => {
             res.status(200).send({

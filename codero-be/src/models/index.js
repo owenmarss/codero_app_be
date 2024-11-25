@@ -30,7 +30,7 @@ db.sequelize = sequelize;
 db.user = require("./user.model.js")(sequelize, Sequelize);
 db.schedule = require("./schedule.model.js")(sequelize, Sequelize);
 db.userSchedule = require("./user_schedule.model.js")(sequelize, Sequelize);
-db.presensi = require("./presensi.model.js")(sequelize, Sequelize);
+db.attendance = require("./attendance.model.js")(sequelize, Sequelize);
 db.payroll = require("./payroll.model.js")(sequelize, Sequelize);
 
 db.transport = require("./transport.model.js")(sequelize, Sequelize);
@@ -38,26 +38,26 @@ db.reimbursement = require("./reimbursement.model.js")(sequelize, Sequelize);
 db.privateTransport = require("./private_transport.model.js")(sequelize, Sequelize);
 db.privateTransportData = require("./private_transport_data.model.js")(sequelize, Sequelize);
 db.publicTransport = require("./public_transport.model.js")(sequelize, Sequelize);
-db.perbehentian = require("./perbehentian.model.js")(sequelize, Sequelize);
+db.publicTransportData = require("./public_transport_data.model.js")(sequelize, Sequelize);
 
 db.partner = require("./partner.model.js")(sequelize, Sequelize);
 db.student = require("./student.model.js")(sequelize, Sequelize);
-db.materi = require("./materi.model.js")(sequelize, Sequelize);
-db.pertemuan = require("./pertemuan.model.js")(sequelize, Sequelize);
+db.curriculum = require("./curriculum.model.js")(sequelize, Sequelize);
+db.session = require("./session.model.js")(sequelize, Sequelize);
 
 db.message = require("./message.model.js")(sequelize, Sequelize);
 db.messageRecipient = require("./message_recipient.model.js")(sequelize, Sequelize);
 
 
 // Define Relationships
-//* Partner - Materi relationship
-db.partner.belongsTo(db.materi, { foreignKey: 'id_materi', as: 'materi' });
-db.materi.hasMany(db.partner, { foreignKey: 'id_materi', as: 'partner' });
+//* Partner - Curriculum relationship
+db.partner.belongsTo(db.curriculum, { foreignKey: 'id_curriculum', as: 'curriculum' });
+db.curriculum.hasMany(db.partner, { foreignKey: 'id_curriculum', as: 'partner' });
 
 
 //* Student - Materi relationship
-db.student.belongsTo(db.materi, { foreignKey: 'id_materi', as: 'materi' });
-db.materi.hasMany(db.student, { foreignKey: 'id_materi', as: 'student' });
+db.student.belongsTo(db.curriculum, { foreignKey: 'id_curriculum', as: 'curriculum' });
+db.curriculum.hasMany(db.student, { foreignKey: 'id_curriculum', as: 'student' });
 
 
 //* Schedule - Partner relationship
@@ -93,9 +93,9 @@ db.schedule.belongsToMany(db.user, {
 });
 
 
-//* UserSchedule - Presensi relationship
-db.userSchedule.hasMany(db.presensi, { foreignKey: 'user_schedule_id', as: 'presensi'} );
-db.presensi.belongsTo(db.userSchedule, {foreignKey: 'user_schedule_id', as: 'userSchedule'});
+//* UserSchedule - Attendance relationship
+db.userSchedule.hasMany(db.attendance, { foreignKey: 'user_schedule_id', as: 'attendance'} );
+db.attendance.belongsTo(db.userSchedule, {foreignKey: 'user_schedule_id', as: 'userSchedule'});
 
 
 //* UserSchedule - User & Schedule (Many-to-One)
@@ -103,9 +103,9 @@ db.userSchedule.belongsTo(db.user, { foreignKey: "user_id", as: "users" });
 db.userSchedule.belongsTo(db.schedule, { foreignKey: "schedule_id", as: "schedules" });
 
 
-//* Presensi - Payroll relationship
-db.payroll.hasMany(db.presensi, { foreignKey: 'payroll_id', as: 'presensi' });
-db.presensi.belongsTo(db.payroll, { foreignKey: 'payroll_id', as: 'payroll' });
+//* Attendance - Payroll relationship
+db.payroll.hasMany(db.attendance, { foreignKey: 'payroll_id', as: 'attendance' });
+db.attendance.belongsTo(db.payroll, { foreignKey: 'payroll_id', as: 'payroll' });
 
 
 //* Transport - Reimbursement relationship
@@ -118,9 +118,9 @@ db.transport.hasOne(db.publicTransport, { foreignKey: 'transport_id', as: 'publi
 db.publicTransport.belongsTo(db.transport, { foreignKey: 'transport_id', as: 'transport' });
 
 
-//* PublicTransport - Perbehentian relationship
-db.publicTransport.hasMany(db.perbehentian, { foreignKey: 'public_transport_id', as: 'perbehentians' });
-db.perbehentian.belongsTo(db.publicTransport, { foreignKey: 'public_transport_id', as: 'publicTransport' });
+//* PublicTransport - PublicTransportData relationship
+db.publicTransport.hasMany(db.publicTransportData, { foreignKey: 'public_transport_id', as: 'publicTransportData' });
+db.publicTransportData.belongsTo(db.publicTransport, { foreignKey: 'public_transport_id', as: 'publicTransport' });
 
 
 //* Transport - Private-Transport relationship
@@ -133,20 +133,20 @@ db.privateTransport.hasMany(db.privateTransportData, { foreignKey: 'private_tran
 db.privateTransportData.belongsTo(db.privateTransport, { foreignKey: 'private_transport_id', as: 'privateTransport' });
 
 
-//* Materi - Pertemuan relationship
-db.materi.hasMany(db.pertemuan, { foreignKey: 'id_materi', as: 'pertemuan' });
-db.pertemuan.belongsTo(db.materi, { foreignKey: 'id_materi', as: 'materi' });
+//* Curriculum - Session relationship
+db.curriculum.hasMany(db.session, { foreignKey: 'id_session', as: 'session' });
+db.session.belongsTo(db.curriculum, { foreignKey: 'id_session', as: 'curriculum' });
 
 
 //* Message - Recipient relationship
-db.user.hasMany(db.message, { foreignKey: 'id_pengirim', as: 'pengirim' });
-db.message.belongsTo(db.user, { foreignKey: 'id_pengirim', as: 'pengirim' });
+db.user.hasMany(db.message, { foreignKey: 'id_sender', as: 'sender' });
+db.message.belongsTo(db.user, { foreignKey: 'id_sender', as: 'sender' });
 
 db.message.hasMany(db.messageRecipient, { foreignKey: 'id_message', onDelete: 'CASCADE' });
 db.messageRecipient.belongsTo(db.message, { foreignKey: 'id_message' });
 
-db.user.hasMany(db.messageRecipient, { foreignKey: 'id_penerima', onDelete: 'CASCADE', as: 'penerima' });
-db.messageRecipient.belongsTo(db.user, { foreignKey: 'id_penerima', as: 'penerima' });
+db.user.hasMany(db.messageRecipient, { foreignKey: 'id_recipient', onDelete: 'CASCADE', as: 'recipient' });
+db.messageRecipient.belongsTo(db.user, { foreignKey: 'id_recipient', as: 'recipient' });
 
 
 // Console log
@@ -154,7 +154,7 @@ db.messageRecipient.belongsTo(db.user, { foreignKey: 'id_penerima', as: 'penerim
 console.log("User Associations:", db.user.associations);
 console.log("Schedule Associations:", db.schedule.associations);
 console.log("UserSchedule Associations:", db.userSchedule.associations);
-console.log("Presensi Associations:", db.presensi.associations);
+console.log("Attendance Associations:", db.attendance.associations);
 console.log("Payroll Associations:", db.payroll.associations);
 console.log("");
 console.log("");
@@ -164,7 +164,10 @@ console.log("Reimbursement Associations:", db.reimbursement.associations);
 console.log("PrivateTransport Associations:", db.privateTransport.associations);
 console.log("PrivateTransportData Associations:", db.privateTransportData.associations);
 console.log("PublicTransport Associations:", db.publicTransport.associations);
-console.log("Perbehentian Associations:", db.perbehentian.associations);
+console.log("PublicTransportData Associations:", db.publicTransportData.associations);
+
+
+
 
 
 module.exports = db;

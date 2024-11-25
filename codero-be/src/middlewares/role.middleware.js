@@ -1,6 +1,6 @@
 const { verifyToken } = require('../utils/jwt.utils');
 
-const checkPosisi = (posisi) => {
+const checkPosisi = (position) => {
     return (req, res, next) => {
         var token = req.headers['authorization'];
         token = token.replace('Bearer ', '');
@@ -18,7 +18,7 @@ const checkPosisi = (posisi) => {
             });
         }
 
-        if(!posisi.includes(decoded.role)) {
+        if(!position.includes(decoded.role)) {
             console.log("This is your user id: " ,decoded.id);
             console.log("This is your role: " ,decoded.role);
             
@@ -27,8 +27,8 @@ const checkPosisi = (posisi) => {
             });
         }
 
-        req.userId = decoded.id;
-        req.posisi = decoded.role;
+        req.employee_id = decoded.id;
+        req.position = decoded.role;
         console.log("berhasil");
         
         next();

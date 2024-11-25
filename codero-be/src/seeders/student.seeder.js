@@ -3,32 +3,32 @@ const db = require('../models');
 const seedStudent = async () => {
     const students = [
         {
-            nama: "John Doe",
-            tempat_lahir: "Jakarta",
-            tanggal_lahir: "2010-01-01",
-            umur: 11,
-            jenjang: "SD",
-            kelas: 2,
-            alamat: "Jl. Mangga Dua No. 3",
-            nama_sekolah: "SMPN 1 Jakarta",
-            nama_ortu: "Mr. Doe",
-            no_telp_ortu: "081234567890",
-            no_telp_anak: "081987654321",
-            id_materi: 1,  // References "Scratch for Grade 1"
+            name: "John Doe",
+            birth_place: "Jakarta",
+            birth_date: "2010-01-01",
+            age: 11,
+            level: "SD",
+            class: 2,
+            address: "Jl. Mangga Dua No. 3",
+            school_name: "SMPN 1 Jakarta",
+            parent_name: "Mr. Doe",
+            parent_phone: "081234567890",
+            student_phone: "081987654321",
+            id_curriculum: 1,  // References "Scratch for Grade 1"
         },
         {
-            nama: "Jane Smith",
-            tempat_lahir: "Bandung",
-            tanggal_lahir: "2011-04-15",
-            umur: 13,
-            jenjang: "SMP",
-            kelas: "7",
-            alamat: "Jl. Dago No. 5",
-            nama_sekolah: "SMPN 2 Bandung",
-            nama_ortu: "Mrs. Smith",
-            no_telp_ortu: "081234567891",
-            no_telp_anak: "081987654322",
-            id_materi: 2,  // References "Robotics for Beginners"
+            name: "Jane Smith",
+            birth_place: "Bandung",
+            birth_date: "2011-04-15",
+            age: 13,
+            level: "SMP",
+            class: "7",
+            address: "Jl. Dago No. 5",
+            school_name: "SMPN 2 Bandung",
+            parent_name: "Mrs. Smith",
+            parent_phone: "081234567891",
+            student_phone: "081987654322",
+            id_curriculum: 2,  // References "Robotics for Beginners"
         },
     ];
 

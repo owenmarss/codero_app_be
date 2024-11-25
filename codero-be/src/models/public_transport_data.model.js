@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize, Sequelize) => {
-    const Perbehentian = sequelize.define("perbehentian", {
+    const PublicTransportData = sequelize.define("public_transport_data", {
         public_transport_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -11,31 +11,31 @@ module.exports = (sequelize, Sequelize) => {
             },
             onDelete: 'CASCADE'
         },
-        index_perbehentian: {
+        index_stop: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        jenis_kendaraan: {
+        vehicle_type: {
             type: DataTypes.ENUM('Bus', 'Kereta', 'Angkot', 'Ojek Online'),
             allowNull: true,
         },
-        link_lokasi_mulai: {
+        start_location_link: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        nama_lokasi_mulai: {
+        start_location_name: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        link_lokasi_tujuan: {
+        destination_location_link: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        nama_lokasi_tujuan: {
+        destination_location_name: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        jarak: {
+        distance: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
@@ -49,5 +49,5 @@ module.exports = (sequelize, Sequelize) => {
         }
     });
 
-    return Perbehentian;
+    return PublicTransportData;
 };

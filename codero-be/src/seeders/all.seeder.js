@@ -2,13 +2,13 @@ const db = require("../models");
 const seedUsers = require("./user.seeder"); // Path to user seeder
 const seedMessages = require("./message.seeder"); // Path to message seeder
 const seedMessageRecipients = require("./message_recipient.seeder"); // Path to message_recipient seeder
-const seedMateri = require("./materi.seeder"); // Path to materi seeder
-const seedPertemuan = require("./pertemuan.seeder"); // Path to pertemuan seeder
+const seedCurriculum = require("./curriculum.seeder"); // Path to curriculum seeder
+const seedSession = require("./session.seeder"); // Path to session seeder
 const seedPartner = require("./partner.seeder"); // Path to partner seeder
 const seedStudent = require("./student.seeder") // Path to student seeder
 const seedSchedule = require("./schedule.seeder") // Path to schedule seeder
 const seedUserSchedule = require("./user_schedule.seeder") // Path to user_schedule seeder
-const seedPresensi = require("./presensi.seeder") // Path to presensi seeder
+const seedAttendance = require("./attendance.seeder") // Path to attendance seeder
 const seedPayroll = require("./payroll.seeder") // Path to payroll seeder
 
 const seedAll = async () => {
@@ -27,10 +27,10 @@ const seedAll = async () => {
         await seedMessageRecipients();
 
         //* Seed materi
-        await seedMateri();
+        await seedCurriculum();
         
         //* Seed pertemuan
-        await seedPertemuan();
+        await seedSession();
 
         //* Seed partners
         await seedPartner();
@@ -45,7 +45,7 @@ const seedAll = async () => {
         await seedUserSchedule();
 
         //* Seed presensi
-        await seedPresensi();
+        await seedAttendance();
 
         //* Seed payrolls
         await seedPayroll();

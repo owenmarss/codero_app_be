@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize, Sequelize) => {
-    const Presensi = sequelize.define('presensi', {
+    const Attendance = sequelize.define('attendance', {
         user_schedule_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -11,15 +11,15 @@ module.exports = (sequelize, Sequelize) => {
             },
             onDelete: 'CASCADE'
         },
-        tanggal: {
+        date: {
             type: DataTypes.DATEONLY,
             allowNull: true,
         },
-        jam_datang: {
+        arrival_time: {
             type: DataTypes.TIME,
             allowNull: true,
         },
-        jam_pulang: {
+        departure_time: {
             type: DataTypes.TIME,
             allowNull: true,
         },
@@ -28,12 +28,12 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: true,
             // defaultValue: 'Masuk'
         },
-        status_datang: {
+        arrival_status: {
             type: DataTypes.ENUM('Belum Isi', 'Sudah Isi'),
             allowNull: true,
             defaultValue: 'Belum Isi'
         },
-        status_pulang: {
+        departure_status: {
             type: DataTypes.ENUM('Belum Isi', 'Sudah Isi'),
             allowNull: true,
             defaultValue: 'Belum Isi'
@@ -49,5 +49,5 @@ module.exports = (sequelize, Sequelize) => {
         }
     })
 
-    return Presensi;
+    return Attendance;
 };

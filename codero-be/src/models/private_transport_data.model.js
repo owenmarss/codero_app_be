@@ -11,63 +11,67 @@ module.exports = (sequelize, Sequelize) => {
             },
             onDelete: 'CASCADE',
         },
-        jenis_kendaraan: {
+        vehicle_type: {
             type: DataTypes.ENUM('Mobil', 'Motor', 'Sepeda', 'Jalan Kaki'),
             allowNull: true,
         },
-        // Datang
-        link_lokasi_mulai_datang: {
+
+        //* Datang
+        arrival_start_link: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        nama_lokasi_mulai_datang: {
+        arrival_start_name: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        link_lokasi_tujuan_datang: {
+        arrival_destination_link: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        nama_lokasi_tujuan_datang: {
+        arrival_destination_name: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        // Pulang
-        link_lokasi_mulai_pulang: {
+
+        //* Pulang
+        departure_start_link: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        nama_lokasi_mulai_pulang: {
+        departure_start_name: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        link_lokasi_tujuan_pulang: {
+        departure_destination_link: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        nama_lokasi_tujuan_pulang: {
+        departure_destination_name: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        // Jarak
-        jarak_datang: {
+
+        //* Jarak
+        arrival_distance: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        jarak_pulang: {
+        departure_distance: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        total_jarak: {
+        total_distance: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        // Cost
-        cost_datang: {
+
+        //* Cost
+        cost_arrival: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        cost_pulang: {
+        cost_departure: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },

@@ -2,31 +2,31 @@ const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize, Sequelize) => {
     const Schedule = sequelize.define('schedule', {
-        jenis_client: {
+        client_type: {
             type: DataTypes.ENUM('Sekolah / Centre', 'Private'),
             allowNull: false
         },
-        jenis_sesi: {
+        session_type: {
             type: DataTypes.ENUM('Onsite', 'Online'),
             allowNull: false
         },
-        jenis_kegiatan: {
+        activity: {
             type: DataTypes.ENUM('Mengajar', 'Trial Class', 'Visit', 'Training', 'Office'),
             allowNull: false
         },
-        hari: {
+        day: {
             type: DataTypes.ENUM('Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'),
             allowNull: false
         },
-        tanggal: {
+        date: {
             type: DataTypes.DATEONLY,
             allowNull: false,
         },
-        jam_mulai: {
+        start_time: {
             type: DataTypes.TIME,
             allowNull: false,
         },
-        jam_selesai: {
+        finish_time: {
             type: DataTypes.TIME,
             allowNull: false,
         },

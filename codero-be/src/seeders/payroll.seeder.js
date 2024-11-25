@@ -30,14 +30,14 @@ const seedPayroll = async () => {
 
     const createdPayrolls = await db.payroll.bulkCreate(payrolls);
 
-    const presensiData = await db.presensi.findAll({
+    const attendanceData = await db.attendance.findAll({
         limit: 10,
     });
 
-    for (let i = 0; i < presensiData.length; i++) {
-        const presensi = presensiData[i];
-        presensi.payroll_id = createdPayrolls[0].id;
-        await presensi.save();
+    for (let i = 0; i < attendanceData.length; i++) {
+        const attendance = attendanceData[i];
+        attendance.payroll_id = createdPayrolls[0].id;
+        await attendance.save();
     }
 
     console.log("Payrolls have been seeded successfully.");

@@ -11,7 +11,7 @@ module.exports = (sequelize, Sequelize) => {
             },
             onDelete: 'CASCADE',
         },
-        id_penerima: {
+        id_recipient: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {

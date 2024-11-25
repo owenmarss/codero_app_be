@@ -2,27 +2,27 @@ const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize, Sequelize) => {
     const Payroll = sequelize.define("payroll", {
-        nominal: {
+        amount: {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        jumlah_presensi: {
+        total_attendance: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        total_nominal: {
+        total_amount: {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        tanggal_mulai: {
+        start_date: {
             type: DataTypes.DATEONLY,
             allowNull: true,
         },
-        tanggal_selesai: {
+        end_date: {
             type: DataTypes.DATEONLY,
             allowNull: true,
         },
-        periode_bulan: {
+        month_period: {
             type: DataTypes.ENUM(
                 "Januari",
                 "Februari",
@@ -39,20 +39,20 @@ module.exports = (sequelize, Sequelize) => {
             ),
             allowNull: false,
         },
-        periode_tahun: {
+        year_period: {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        status_pembayaran: {
+        payment_status: {
             type: DataTypes.ENUM("Belum Dibayar", "Sudah Dibayar"),
             allowNull: false,
             defaultValue: "Belum Dibayar",
         },
-        tanggal_pembayaran: {
+        payment_date: {
             type: DataTypes.DATEONLY,
             allowNull: true,
         },
-        jam_pembayaran: {
+        payment_time: {
             type: DataTypes.TIME,
             allowNull: true,
         },

@@ -4,148 +4,148 @@ const seedMessages = async () => {
     // await db.sequelize.sync({ alter: true }); // This will drop the table if it already exists
     const messages = [
         {
-            id_pengirim: 1, // ID of the sender from the `users` table
-            tanggal_dikirim: new Date().toISOString().split("T")[0],
-            waktu_dikirim: new Date().toLocaleTimeString("en-GB", {
+            id_sender: 1, // ID of the sender from the `users` table
+            send_date: new Date().toISOString().split("T")[0],
+            send_time: new Date().toLocaleTimeString("en-GB", {
                 hour12: false,
             }),
             subject: "First Test Message",
-            isi_pesan: "This is the content of the first test message.",
+            content: "This is the content of the first test message.",
         },
         {
-            id_pengirim: 2, // Another sender's ID
-            tanggal_dikirim: new Date().toISOString().split("T")[0],
-            waktu_dikirim: new Date().toLocaleTimeString("en-GB", {
+            id_sender: 2, // Another sender's ID
+            send_date: new Date().toISOString().split("T")[0],
+            send_time: new Date().toLocaleTimeString("en-GB", {
                 hour12: false,
             }),
             subject: "Second Test Message",
-            isi_pesan: "This is the content of the second test message.",
+            content: "This is the content of the second test message.",
         },
         {
-            id_pengirim: 2, // Another sender's ID
-            tanggal_dikirim: new Date().toISOString().split("T")[0],
-            waktu_dikirim: new Date().toLocaleTimeString("en-GB", {
+            id_sender: 2, // Another sender's ID
+            send_date: new Date().toISOString().split("T")[0],
+            send_time: new Date().toLocaleTimeString("en-GB", {
                 hour12: false,
             }),
-            subject: "Second Test Message",
-            isi_pesan: "This is the content of the second test message.",
+            subject: "Third Test Message",
+            content: "This is the content of the third test message.",
         },
         {
-            id_pengirim: 2, // Another sender's ID
-            tanggal_dikirim: new Date().toISOString().split("T")[0],
-            waktu_dikirim: new Date().toLocaleTimeString("en-GB", {
+            id_sender: 2, // Another sender's ID
+            send_date: new Date().toISOString().split("T")[0],
+            send_time: new Date().toLocaleTimeString("en-GB", {
                 hour12: false,
             }),
-            subject: "Second Test Message",
-            isi_pesan: "This is the content of the second test message.",
+            subject: "Fourth Test Message",
+            content: "This is the content of the fourth test message.",
         },
         {
-            id_pengirim: 2, // Another sender's ID
-            tanggal_dikirim: new Date().toISOString().split("T")[0],
-            waktu_dikirim: new Date().toLocaleTimeString("en-GB", {
+            id_sender: 2, // Another sender's ID
+            send_date: new Date().toISOString().split("T")[0],
+            send_time: new Date().toLocaleTimeString("en-GB", {
                 hour12: false,
             }),
-            subject: "Second Test Message",
-            isi_pesan: "This is the content of the second test message.",
+            subject: "Fifth Test Message",
+            content: "This is the content of the fifth test message.",
         },
         {
-            id_pengirim: 2, // Another sender's ID
-            tanggal_dikirim: new Date().toISOString().split("T")[0],
-            waktu_dikirim: new Date().toLocaleTimeString("en-GB", {
+            id_sender: 2, // Another sender's ID
+            send_date: new Date().toISOString().split("T")[0],
+            send_time: new Date().toLocaleTimeString("en-GB", {
                 hour12: false,
             }),
-            subject: "Second Test Message",
-            isi_pesan: "This is the content of the second test message.",
+            subject: "Sixth Test Message",
+            content: "This is the content of the sixth test message.",
         },
         {
-            id_pengirim: 2, // Another sender's ID
-            tanggal_dikirim: new Date().toISOString().split("T")[0],
-            waktu_dikirim: new Date().toLocaleTimeString("en-GB", {
+            id_sender: 2, // Another sender's ID
+            send_date: new Date().toISOString().split("T")[0],
+            send_time: new Date().toLocaleTimeString("en-GB", {
                 hour12: false,
             }),
-            subject: "Second Test Message",
-            isi_pesan: "This is the content of the second test message.",
+            subject: "Seventh Test Message",
+            content: "This is the content of the seventh test message.",
         },
         {
-            id_pengirim: 2, // Another sender's ID
-            tanggal_dikirim: new Date().toISOString().split("T")[0],
-            waktu_dikirim: new Date().toLocaleTimeString("en-GB", {
+            id_sender: 2, // Another sender's ID
+            send_date: new Date().toISOString().split("T")[0],
+            send_time: new Date().toLocaleTimeString("en-GB", {
                 hour12: false,
             }),
-            subject: "Second Test Message",
-            isi_pesan: "This is the content of the second test message.",
+            subject: "Eight Test Message",
+            content: "This is the content of the eight test message.",
         },
         {
-            id_pengirim: 2, // Another sender's ID
-            tanggal_dikirim: new Date().toISOString().split("T")[0],
-            waktu_dikirim: new Date().toLocaleTimeString("en-GB", {
+            id_sender: 2, // Another sender's ID
+            send_date: new Date().toISOString().split("T")[0],
+            send_time: new Date().toLocaleTimeString("en-GB", {
                 hour12: false,
             }),
-            subject: "Second Test Message",
-            isi_pesan: "This is the content of the second test message.",
+            subject: "Ninth Test Message",
+            content: "This is the content of the ninth test message.",
         },
         {
-            id_pengirim: 2, // Another sender's ID
-            tanggal_dikirim: new Date().toISOString().split("T")[0],
-            waktu_dikirim: new Date().toLocaleTimeString("en-GB", {
+            id_sender: 2, // Another sender's ID
+            send_date: new Date().toISOString().split("T")[0],
+            send_time: new Date().toLocaleTimeString("en-GB", {
                 hour12: false,
             }),
-            subject: "Second Test Message",
-            isi_pesan: "This is the content of the second test message.",
+            subject: "Tenth Test Message",
+            content: "This is the content of the tenth test message.",
         },
         {
-            id_pengirim: 2, // Another sender's ID
-            tanggal_dikirim: new Date().toISOString().split("T")[0],
-            waktu_dikirim: new Date().toLocaleTimeString("en-GB", {
+            id_sender: 2, // Another sender's ID
+            send_date: new Date().toISOString().split("T")[0],
+            send_time: new Date().toLocaleTimeString("en-GB", {
                 hour12: false,
             }),
-            subject: "Second Test Message",
-            isi_pesan: "This is the content of the second test message.",
+            subject: "Eleventh Test Message",
+            content: "This is the content of the eleventh test message.",
         },
         {
-            id_pengirim: 2, // Another sender's ID
-            tanggal_dikirim: new Date().toISOString().split("T")[0],
-            waktu_dikirim: new Date().toLocaleTimeString("en-GB", {
+            id_sender: 2, // Another sender's ID
+            send_date: new Date().toISOString().split("T")[0],
+            send_time: new Date().toLocaleTimeString("en-GB", {
                 hour12: false,
             }),
-            subject: "Second Test Message",
-            isi_pesan: "This is the content of the second test message.",
+            subject: "Twelfth Test Message",
+            content: "This is the content of the Twelfth test message.",
         },
         {
-            id_pengirim: 2, // Another sender's ID
-            tanggal_dikirim: new Date().toISOString().split("T")[0],
-            waktu_dikirim: new Date().toLocaleTimeString("en-GB", {
+            id_sender: 2, // Another sender's ID
+            send_date: new Date().toISOString().split("T")[0],
+            send_time: new Date().toLocaleTimeString("en-GB", {
                 hour12: false,
             }),
-            subject: "Second Test Message",
-            isi_pesan: "This is the content of the second test message.",
+            subject: "Thirteenth Test Message",
+            content: "This is the content of the Thirteenth test message.",
         },
         {
-            id_pengirim: 2, // Another sender's ID
-            tanggal_dikirim: new Date().toISOString().split("T")[0],
-            waktu_dikirim: new Date().toLocaleTimeString("en-GB", {
+            id_sender: 2, // Another sender's ID
+            send_date: new Date().toISOString().split("T")[0],
+            send_time: new Date().toLocaleTimeString("en-GB", {
                 hour12: false,
             }),
-            subject: "Second Test Message",
-            isi_pesan: "This is the content of the second test message.",
+            subject: "Fourteenth Test Message",
+            content: "This is the content of the Fourteenth test message.",
         },
         {
-            id_pengirim: 2, // Another sender's ID
-            tanggal_dikirim: new Date().toISOString().split("T")[0],
-            waktu_dikirim: new Date().toLocaleTimeString("en-GB", {
+            id_sender: 2, // Another sender's ID
+            send_date: new Date().toISOString().split("T")[0],
+            send_time: new Date().toLocaleTimeString("en-GB", {
                 hour12: false,
             }),
-            subject: "Second Test Message",
-            isi_pesan: "This is the content of the second test message.",
+            subject: "Fifteenth Test Message",
+            content: "This is the content of the Fifteenth test message.",
         },
         {
-            id_pengirim: 2, // Another sender's ID
-            tanggal_dikirim: new Date().toISOString().split("T")[0],
-            waktu_dikirim: new Date().toLocaleTimeString("en-GB", {
+            id_sender: 2, // Another sender's ID
+            send_date: new Date().toISOString().split("T")[0],
+            send_time: new Date().toLocaleTimeString("en-GB", {
                 hour12: false,
             }),
-            subject: "Second Test Message",
-            isi_pesan: "This is the content of the second test message.",
+            subject: "Sixteenth Test Message",
+            content: "This is the content of the Sixteenth test message.",
         },
     ];
 

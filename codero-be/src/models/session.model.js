@@ -1,25 +1,25 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize, Sequelize) => {
-    const Pertemuan = sequelize.define("pertemuan", {
-        id_materi: {
+    const Session = sequelize.define("session", {
+        id_curriculum: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'materis',
+                model: 'curriculums',
                 key: 'id',
             },
             onDelete: 'CASCADE',
         },
-        index_pertemuan: {
+        index_session: {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        judul_pertemuan: {
+        session_title: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        isi_pertemuan: {
+        session_content: {
             type: DataTypes.TEXT,
             allowNull: true,
         },
@@ -33,5 +33,5 @@ module.exports = (sequelize, Sequelize) => {
         },
     });
 
-    return Pertemuan;
+    return Session;
 }

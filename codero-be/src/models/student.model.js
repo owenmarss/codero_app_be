@@ -2,55 +2,55 @@ const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize, Sequelize) => {
     const Student = sequelize.define('student', {
-        nama: {
+        name: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        tempat_lahir: {
+        birth_place: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        tanggal_lahir: {
+        birth_date: {
             type: DataTypes.DATEONLY,
             allowNull: true,
         },
-        umur: {
+        age: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        jenjang: {
+        level: {
             type: DataTypes.ENUM('TK', 'SD', 'SMP', 'SMA'),
             allowNull: true,
         },
-        kelas: {
+        class: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        alamat: {
+        address: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        nama_sekolah: {
+        school_name: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        nama_ortu: {
+        parent_name: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        no_telp_ortu: {
+        parent_phone: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        no_telp_anak: {
+        student_phone: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        id_materi: {
+        id_curriculum: {
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
-                model: 'materis',
+                model: 'curriculums',
                 key: 'id',
             },
             onDelete: 'SET NULL',

@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize, Sequelize) => {
     const Message = sequelize.define('message', {
-        id_pengirim: {
+        id_sender: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
@@ -10,12 +10,12 @@ module.exports = (sequelize, Sequelize) => {
                 key: 'id',
             }
         },
-        tanggal_dikirim: {
+        send_date: {
             type: DataTypes.DATEONLY,
             allowNull: false,
             defaultValue: Sequelize.NOW,
         },
-        waktu_dikirim: {
+        send_time: {
             type: DataTypes.TIME,
             allowNull: false,
         },
@@ -23,7 +23,7 @@ module.exports = (sequelize, Sequelize) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        isi_pesan: {
+        content: {
             type: DataTypes.TEXT,
             allowNull: false,
         },

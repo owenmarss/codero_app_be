@@ -1,45 +1,26 @@
 const db = require("../models");
 const Partner = db.partner;
-const Materi = db.materi;
+const Curriculum = db.curriculum;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new School 
 exports.create = (req, res) => {
-    // console.log(req.body.data);
+    const { name, category, address, region, level, grade, id_curriculum } = req.body.data;
 
-    // if (!req.body.data.nama || !req.body.data.jenis || !req.body.data.alamat || !req.body.data.daerah || !req.body.data.jenjang || !req.body.data.kelas || !req.body.data.tipeMateri || !req.body.data.materi) {
-    //     return res.status(400).send({
-    //         message: "Content can not be empty!",
-    //     });
-    // }
-
-    // const Partner = {
-    //     nama: req.body.data.nama,
-    //     jenis: req.body.data.jenis,
-    //     alamat: req.body.data.alamat,
-    //     daerah: req.body.data.daerah,
-    //     jenjang: req.body.data.jenjang,
-    //     kelas: req.body.data.kelas,
-    //     tipeMateri: req.body.data.tipeMateri,
-    //     materi: req.body.data.materi
-    // };
-
-    const { nama, jenis, alamat, daerah, jenjang, kelas, id_materi } = req.body.data;
-
-    if (!nama || !jenis) {
+    if (!name || !category) {
         return res.status(400).send({
             message: "Content can not be empty!",
         });
     }
 
     Partner.create({
-        nama: nama,
-        jenis: jenis,
-        alamat: alamat,
-        daerah: daerah,
-        jenjang: jenjang,
-        kelas: kelas,
-        id_materi: id_materi
+        name: name,
+        category: category,
+        address: address,
+        region: region,
+        level: level,
+        grade: grade,
+        id_curriculum: id_curriculum
     })
         .then((data) => {
             res.status(200).send(data);
@@ -54,8 +35,8 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-    // const { nama, jenis, alamat, daerah, jenjang, kelas, tipeMateri, materi, sort, order = "ASC", and, or } = req.query;
-    const { nama, jenis, alamat, daerah, jenjang, kelas, id_materi, sort, order = "ASC", and, or } = req.query;
+    // const { name, category, address, region, level, grade, tipeMateri, materi, sort, order = "ASC", and, or } = req.query;
+    const { name, category, address, region, level, grade, id_curriculum, sort, order = "ASC", and, or } = req.query;
     let condition = {};
 
     if (and) {
@@ -71,26 +52,26 @@ exports.findAll = (req, res) => {
         });
         condition = { [Op.or]: orConditions };
     } else {
-        if (nama) {
-            condition.nama = { [Op.like]: `%${nama}%` };
+        if (name) {
+            condition.name = { [Op.like]: `%${name}%` };
         }
-        if (jenis) {
-            condition.jenis = { [Op.like]: `%${jenis}%` };
+        if (category) {
+            condition.category = { [Op.like]: `%${category}%` };
         }
-        if (alamat) {
-            condition.alamat = { [Op.like]: `%${alamat}%` };
+        if (address) {
+            condition.address = { [Op.like]: `%${address}%` };
         }
-        if (daerah) {
-            condition.daerah = { [Op.like]: `%${daerah}%` };
+        if (region) {
+            condition.region = { [Op.like]: `%${region}%` };
         }
-        if (jenjang) {
-            condition.jenjang = { [Op.like]: `%${jenjang}%` };
+        if (level) {
+            condition.level = { [Op.like]: `%${level}%` };
         }
-        if (kelas) {
-            condition.kelas = { [Op.like]: `%${kelas}%` };
+        if (grade) {
+            condition.grade = { [Op.like]: `%${grade}%` };
         }
-        if (id_materi) {
-            condition.id_materi = id_materi;
+        if (id_curriculum) {
+            condition.id_curriculum = id_curriculum;
         }
     }
 
@@ -104,9 +85,9 @@ exports.findAll = (req, res) => {
         order: orderCondition,
         include: [
             {
-                model: Materi,
-                as: "materi",
-                attributes: ["id", "judul_materi", "jenis_materi"],
+                model: Curriculum,
+                as: "curriculum",
+                attributes: ["id", "curriculum_title", "curriculum_type"],
             },
         ],
     })
@@ -128,9 +109,9 @@ exports.findOne = (req, res) => {
     Partner.findByPk(id, {
         include: [
             {
-                model: Materi,
-                as: "materi",
-                attributes: ["id", "judul_materi", "jenis_materi"],
+                model: Curriculum,
+                as: "curriculum",
+                attributes: ["id", "curriculum_title", "curriculum_type"],
             },
         ],
     })
@@ -152,20 +133,9 @@ exports.findOne = (req, res) => {
 
 exports.update = (req, res) => {
     const id = req.params.id;
-    // const { nama, jenis, alamat, daerah, jenjang, kelas, tipeMateri, materi } = req.body;
-    const { nama, jenis, alamat, daerah, jenjang, kelas, id_materi } = req.body.data;
+    const { name, category, address, region, level, grade, id_curriculum } = req.body.data;
 
-    // const updateData = {};
-    // if (nama) updateData.nama = nama;
-    // if (jenis) updateData.jenis = jenis;
-    // if (alamat) updateData.alamat = alamat;
-    // if (daerah) updateData.daerah = daerah;
-    // if (jenjang) updateData.jenjang = jenjang;
-    // if (kelas) updateData.kelas = kelas;
-    // if (tipeMateri) updateData.tipeMateri = tipeMateri;
-    // if (materi) updateData.materi = materi;
-
-    if(!nama || !jenis) {
+    if(!name || !category) {
         return res.status(400).send({
             message: "Content can not be empty!",
         });
@@ -173,13 +143,13 @@ exports.update = (req, res) => {
 
     Partner.update(
         {
-            nama: nama,
-            jenis: jenis,
-            alamat: alamat,
-            daerah: daerah,
-            jenjang: jenjang,
-            kelas: kelas,
-            id_materi: id_materi
+            name: name,
+            category: category,
+            address: address,
+            region: region,
+            level: level,
+            grade: grade,
+            id_curriculum: id_curriculum
         }, 
         {
             where: { id: id },
@@ -199,26 +169,6 @@ exports.update = (req, res) => {
             message: "Error updating School or Centre with id=" + id,
         });
     });
-
-    // Partner.update(req.body, {
-    //     where: { id: id },
-    // })
-    //     .then((num) => {
-    //         if (num == 1) {
-    //             res.send({
-    //                 message: "School or Centre was updated successfully.",
-    //             });
-    //         } else {
-    //             res.send({
-    //                 message: `Cannot update School or Centre with id=${id}. Maybe School or Centre was not found or req.body is empty!`,
-    //             });
-    //         }
-    //     })
-    //     .catch((err) => {
-    //         res.status(500).send({
-    //             message: "Error updating School or Centre with id=" + id,
-    //         });
-    //     });
 };
 
 exports.delete = (req, res) => {

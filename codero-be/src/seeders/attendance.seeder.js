@@ -1,7 +1,7 @@
 const db = require('../models');
 
-const seedPresensi = async () => {
-    const presensis = [
+const seedAttendance = async () => {
+    const attendances = [
         // {
         //     user_schedule_id: 1, // Replace with valid UserSchedule ID
         //     tanggal: "2024-11-20",
@@ -31,8 +31,8 @@ const seedPresensi = async () => {
         // }
     ];
 
-    await db.presensi.bulkCreate(presensis);
-    console.log("Presensi have been seeded successfully.");
+    await db.attendance.bulkCreate(attendances);
+    console.log("Attendance have been seeded successfully.");
 };
 
-module.exports = seedPresensi;
+module.exports = seedAttendance;

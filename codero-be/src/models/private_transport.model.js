@@ -11,7 +11,7 @@ module.exports = (sequelize, Sequelize) => {
             },
             onDelete: 'CASCADE'
         },
-        no_plat: {
+        license_number: {
             type: DataTypes.STRING,
             allowNull: true,
         }

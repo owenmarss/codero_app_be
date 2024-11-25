@@ -9,7 +9,7 @@ router.get('/', authMiddleware, payroll.getAllPayroll);
 router.get('/:id', authMiddleware, payroll.getPayrollById);
 router.get('/user/:userId', authMiddleware, payroll.getPayrollByUserId);
 router.post('/', authMiddleware, payroll.createPayroll);
-router.put('/:id', authMiddleware, payroll.updatePembayaranById);
+router.put('/:id', authMiddleware, payroll.updatePaymentById);
 router.delete('/', authMiddleware, payroll.deleteAllPayroll);
 router.delete('/:id', authMiddleware, payroll.deletePayrollById);
 

@@ -1,6 +1,6 @@
 const db = require("../models");
 const Payroll = db.payroll;
-const Presensi = db.presensi;
+const Attendance = db.attendance;
 const UserSchedule = db.userSchedule;
 const User = db.user;
 const Schedule = db.schedule;
@@ -10,20 +10,20 @@ const { Op } = require("sequelize");
 exports.createPayroll = async (req, res) => {
     const {
         user_id,
-        nominal,
-        tanggal_mulai,
-        tanggal_selesai,
-        periode_bulan,
-        periode_tahun,
+        amount,
+        start_date,
+        end_date,
+        month_period,
+        year_period,
     } = req.body.data;
 
     if (
         !user_id ||
-        !nominal ||
-        !tanggal_mulai ||
-        !tanggal_selesai ||
-        !periode_bulan ||
-        !periode_tahun
+        !amount ||
+        !start_date ||
+        !end_date ||
+        !month_period ||
+        !year_period
     ) {
         return res.status(400).send({
             message: "Content can not be empty!",
@@ -31,14 +31,14 @@ exports.createPayroll = async (req, res) => {
     }
 
     try {
-        const presensiData = await Presensi.findAll({
+        const attendanceData = await Attendance.findAll({
             where: {
-                tanggal: {
-                    [Op.between]: [tanggal_mulai, tanggal_selesai],
+                date: {
+                    [Op.between]: [start_date, end_date],
                 },
                 status: "Masuk",
-                status_datang: "Sudah Isi",
-                status_pulang: "Sudah Isi",
+                arrival_status: "Sudah Isi",
+                departure_status: "Sudah Isi",
             },
             include: [
                 {
@@ -49,24 +49,24 @@ exports.createPayroll = async (req, res) => {
             ],
         });
 
-        const jumlah_presensi = presensiData.length;
-        const total_nominal = jumlah_presensi * nominal;
+        const total_attendance = attendanceData.length;
+        const total_amount = total_attendance * amount;
 
         const payroll = await Payroll.create({
-            nominal: nominal,
-            jumlah_presensi: jumlah_presensi,
-            total_nominal: total_nominal,
-            tanggal_mulai: tanggal_mulai,
-            tanggal_selesai: tanggal_selesai,
-            periode_bulan: periode_bulan,
-            periode_tahun: periode_tahun,
-            status_pembayaran: "Belum Dibayar"
+            amount: amount,
+            total_attendance: total_attendance,
+            total_amount: total_amount,
+            start_date: start_date,
+            end_date: end_date,
+            month_period: month_period,
+            year_period: year_period,
+            payment_status: "Belum Dibayar"
         });
 
         await Promise.all(
-            presensiData.map((presensi) => {
-                presensi.payroll_id = payroll.id;
-                return presensi.save();
+            attendanceData.map((attendance) => {
+                attendance.payroll_id = payroll.id;
+                return attendance.save();
             })
         );
 
@@ -88,14 +88,14 @@ exports.getAllPayroll = async (req, res) => {
         const payroll = await Payroll.findAll({
             include: [
                 {
-                    model: Presensi,
-                    as: "presensi",
+                    model: Attendance,
+                    as: "attendance",
                     attributes: [
                         "id",
-                        "tanggal",
+                        "date",
                         "status",
-                        "status_datang",
-                        "status_pulang",
+                        "arrival_status",
+                        "departure_status",
                     ],
                     include: [
                         {
@@ -107,13 +107,13 @@ exports.getAllPayroll = async (req, res) => {
                                     as: "schedules",
                                     attributes: [
                                         "id",
-                                        "jenis_client",
-                                        "jenis_sesi",
-                                        "jenis_kegiatan",
-                                        "hari",
-                                        "tanggal",
-                                        "jam_mulai",
-                                        "jam_selesai",
+                                        "client_type",
+                                        "session_type",
+                                        "activity",
+                                        "day",
+                                        "date",
+                                        "start_time",
+                                        "finish_time",
                                         "status",
                                     ]
                                 },
@@ -122,11 +122,11 @@ exports.getAllPayroll = async (req, res) => {
                                     as: "users",
                                     attributes: [
                                         "id",
-                                        "namaDepan",
-                                        "namaBelakang",
-                                        "posisi",
-                                        "jam_kerja",
-                                        "cabang",
+                                        "first_name",
+                                        "last_name",
+                                        "position",
+                                        "working_hour",
+                                        "branch",
                                     ],
                                 }
                             ]
@@ -153,14 +153,14 @@ exports.getPayrollById = async (req, res) => {
         const payroll = await Payroll.findByPk(id, {
             include: [
                 {
-                    model: Presensi,
-                    as: "presensi",
+                    model: Attendance,
+                    as: "attendance",
                     attributes: [
                         "id",
-                        "tanggal",
+                        "date",
                         "status",
-                        "status_datang",
-                        "status_pulang",
+                        "arrival_status",
+                        "departure_status",
                     ],
                     include: [
                         {
@@ -172,13 +172,13 @@ exports.getPayrollById = async (req, res) => {
                                     as: "schedules",
                                     attributes: [
                                         "id",
-                                        "jenis_client",
-                                        "jenis_sesi",
-                                        "jenis_kegiatan",
-                                        "hari",
-                                        "tanggal",
-                                        "jam_mulai",
-                                        "jam_selesai",
+                                        "client_type",
+                                        "session_type",
+                                        "activity",
+                                        "day",
+                                        "date",
+                                        "start_time",
+                                        "finish_time",
                                         "status",
                                     ]
                                 },
@@ -187,11 +187,11 @@ exports.getPayrollById = async (req, res) => {
                                     as: "users",
                                     attributes: [
                                         "id",
-                                        "namaDepan",
-                                        "namaBelakang",
-                                        "posisi",
-                                        "jam_kerja",
-                                        "cabang",
+                                        "first_name",
+                                        "last_name",
+                                        "position",
+                                        "working_hour",
+                                        "branch",
                                     ],
                                 }
                             ]
@@ -231,8 +231,8 @@ exports.getPayrollByUserId = async (req, res) => {
         const payroll = await Payroll.findAll({
             include: [
                 {
-                    model: Presensi,
-                    as: "presensi",
+                    model: Attendance,
+                    as: "attendance",
                     required: true,
                     include: [
                         {
@@ -246,13 +246,13 @@ exports.getPayrollByUserId = async (req, res) => {
                                     as: "schedules",
                                     attributes: [
                                         "id",
-                                        "jenis_client",
-                                        "jenis_sesi",
-                                        "jenis_kegiatan",
-                                        "hari",
-                                        "tanggal",
-                                        "jam_mulai",
-                                        "jam_selesai",
+                                        "client_type",
+                                        "session_type",
+                                        "activity",
+                                        "day",
+                                        "date",
+                                        "start_time",
+                                        "finish_time",
                                         "status",
                                     ]
                                 },
@@ -261,11 +261,11 @@ exports.getPayrollByUserId = async (req, res) => {
                                     as: "users",
                                     attributes: [
                                         "id",
-                                        "namaDepan",
-                                        "namaBelakang",
-                                        "posisi",
-                                        "jam_kerja",
-                                        "cabang",
+                                        "first_name",
+                                        "last_name",
+                                        "position",
+                                        "working_hour",
+                                        "branch",
                                     ],
                                 }
                             ]
@@ -284,10 +284,10 @@ exports.getPayrollByUserId = async (req, res) => {
     }
 };
 
-// Update Pembayaran By ID
-exports.updatePembayaranById = async (req, res) => {
+// Update Payment By ID
+exports.updatePaymentById = async (req, res) => {
     const id = req.params.id;
-    const { status_pembayaran, tanggal_pembayaran, jam_pembayaran } = req.body.data;
+    // const { payment_status, payment_date, payment_time } = req.body.data;
 
     try {
         const payroll = await Payroll.findByPk(id);
@@ -298,9 +298,9 @@ exports.updatePembayaranById = async (req, res) => {
             });
         }
 
-        payroll.status_pembayaran = "Sudah Dibayar";
-        payroll.tanggal_pembayaran = tanggal_pembayaran || new Date().toISOString().split("T")[0];
-        payroll.jam_pembayaran = jam_pembayaran || new Date().toTimeString().split(" ")[0];;
+        payroll.payment_status = "Sudah Dibayar";
+        payroll.payment_date = new Date().toISOString().split("T")[0];
+        payroll.payment_time = new Date().toTimeString().split(" ")[0];;
 
         await payroll.save();
 

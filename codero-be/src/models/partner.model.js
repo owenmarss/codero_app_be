@@ -2,35 +2,35 @@ const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize, Sequelize) => {
     const Partner = sequelize.define("partner", {
-        nama: {
+        name: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        jenis_partner: {
+        category: {
             type: DataTypes.ENUM('Sekolah', 'Centre'),
             allowNull: false,
         },
-        alamat: {
+        address: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        daerah: {
+        region: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        jenjang: {
+        level: {
             type: DataTypes.ENUM('TK', 'SD', 'SMP', 'SMA'),
             allowNull: true,
         },
-        kelas: {
+        grade: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        id_materi: {
+        id_curriculum: {
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
-                model: 'materis',
+                model: 'curriculums',   
                 key: 'id',
             },
             onDelete: 'SET NULL',

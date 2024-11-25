@@ -1,16 +1,15 @@
-const { where } = require("sequelize");
 const db = require("../models");
-const Presensi = db.presensi;
+const Attendance = db.attendance;
 const UserSchedule = db.userSchedule;
 const User = db.user;
 const Schedule = db.schedule;
 const Partner = db.partner;
 const Student = db.student;
-const Materi = db.materi;
+const Curriculum = db.curriculum;
 
-// Create and Save a new Presensi
-exports.createPresensi = async (req, res) => {
-    const { user_schedule_id, tanggal, jam_datang, status, status_datang } = req.body.data;
+// Create and Save a new Attendance
+exports.createAttendance = async (req, res) => {
+    const { user_schedule_id, date, arrival_time, status, arrival_status } = req.body.data;
 
     try {
         const userSchedule = await UserSchedule.findByPk(user_schedule_id);
@@ -20,30 +19,30 @@ exports.createPresensi = async (req, res) => {
             });
         }
 
-        const presensi = await Presensi.create({
+        const attendance = await Attendance.create({
             user_schedule_id: user_schedule_id,
-            tanggal: tanggal,
-            jam_datang: jam_datang,
+            date: date,
+            arrival_time: arrival_time,
             status: status,
-            status_datang: status_datang,
+            arrival_status: arrival_status,
         });
 
         res.status(201).send({
-            message: "Presensi was created successfully!",
+            message: "Attendance was created successfully!",
         });
     } catch (err) {
         res.status(500).send({
             message:
                 err.message ||
-                "Some error occurred while creating the Presensi.",
+                "Some error occurred while creating the Attendance.",
         });
     }
 };
 
-// Get all Presensi
-exports.getAllPresensi = async (req, res) => {
+// Get all Attendance
+exports.getAllAttendance = async (req, res) => {
     try {
-        const presensi = await Presensi.findAll({
+        const attendance = await Attendance.findAll({
             include: [
                 {
                     model: UserSchedule,
@@ -54,11 +53,11 @@ exports.getAllPresensi = async (req, res) => {
                             as: "users",
                             attributes: [
                                 "id",
-                                "namaDepan",
-                                "namaBelakang",
-                                "posisi",
-                                "jam_kerja",
-                                "cabang",
+                                "first_name",
+                                "last_name",
+                                "position",
+                                "working_hour",
+                                "branch",
                             ],
                         },
                         {
@@ -66,37 +65,37 @@ exports.getAllPresensi = async (req, res) => {
                             as: "schedules",
                             attributes: [
                                 "id",
-                                "jenis_client",
-                                "jenis_sesi",
-                                "jenis_kegiatan",
-                                "hari",
-                                "tanggal",
-                                "jam_mulai",
-                                "jam_selesai",
+                                "client_type",
+                                "session_type",
+                                "activity",
+                                "day",
+                                "date",
+                                "start_time",
+                                "finish_time",
                                 "status",
                             ],
                             include: [
                                 {
                                     model: Partner,
                                     as: "partner",
-                                    attributes: ["id", "nama", "id_materi"],
+                                    attributes: ["id", "name", "id_curriculum"],
                                     include: [
                                         {
-                                            model: Materi,
-                                            as: "materi",
-                                            attributes: ["id", "judul_materi", "jenis_materi"],
+                                            model: Curriculum,
+                                            as: "curriculum",
+                                            attributes: ["id", "curriculum_title", "curriculum_type"],
                                         },
                                     ]
                                 },
                                 {
                                     model: Student,
                                     as: "student",
-                                    attributes: ["id", "nama", "id_materi"],
+                                    attributes: ["id", "name", "id_curriculum"],
                                     include: [
                                         {
-                                            model: Materi,
-                                            as: "materi",
-                                            attributes: ["id", "judul_materi", "jenis_materi"],
+                                            model: Curriculum,
+                                            as: "curriculum",
+                                            attributes: ["id", "curriculum_title", "curriculum_type"],
                                         },
                                     ]
                                 },
@@ -107,22 +106,22 @@ exports.getAllPresensi = async (req, res) => {
             ],
         });
 
-        res.status(200).send(presensi);
+        res.status(200).send(attendance);
     } catch (err) {
-        console.error("Error in getAllPresensi:", err); // Log error
+        console.error("Error in getAllAttendance:", err); // Log error
         res.status(500).send({
             message:
-                err.message || "Some error occurred while retrieving Presensi.",
+                err.message || "Some error occurred while retrieving Attendance.",
         });
     }
 };
 
-// Get a single Presensi with an id
-exports.getPresensiById = async (req, res) => {
+// Get a single Attendance with an id
+exports.getAttendanceById = async (req, res) => {
     const id = req.params.id;
 
     try {
-        const presensi = await Presensi.findByPk(id, {
+        const attendance = await Attendance.findByPk(id, {
             include: [
                 {
                     model: UserSchedule,
@@ -133,11 +132,11 @@ exports.getPresensiById = async (req, res) => {
                             as: "users",
                             attributes: [
                                 "id",
-                                "namaDepan",
-                                "namaBelakang",
-                                "posisi",
-                                "jam_kerja",
-                                "cabang",
+                                "first_name",
+                                "last_name",
+                                "position",
+                                "working_hour",
+                                "branch",
                             ],
                         },
                         {
@@ -145,37 +144,37 @@ exports.getPresensiById = async (req, res) => {
                             as: "schedules",
                             attributes: [
                                 "id",
-                                "jenis_client",
-                                "jenis_sesi",
-                                "jenis_kegiatan",
-                                "hari",
-                                "tanggal",
-                                "jam_mulai",
-                                "jam_selesai",
+                                "client_type",
+                                "session_type",
+                                "activity",
+                                "day",
+                                "date",
+                                "start_time",
+                                "finish_time",
                                 "status",
                             ],
                             include: [
                                 {
                                     model: Partner,
                                     as: "partner",
-                                    attributes: ["id", "nama", "id_materi"],
+                                    attributes: ["id", "name", "id_curriculum"],
                                     include: [
                                         {
-                                            model: Materi,
-                                            as: "materi",
-                                            attributes: ["id", "judul_materi", "jenis_materi"],
+                                            model: Curriculum,
+                                            as: "curriculum",
+                                            attributes: ["id", "curriculum_title", "curriculum_type"],
                                         },
                                     ]
                                 },
                                 {
                                     model: Student,
                                     as: "student",
-                                    attributes: ["id", "nama", "id_materi"],
+                                    attributes: ["id", "name", "id_curriculum"],
                                     include: [
                                         {
-                                            model: Materi,
-                                            as: "materi",
-                                            attributes: ["id", "judul_materi", "jenis_materi"],
+                                            model: Curriculum,
+                                            as: "curriculum",
+                                            attributes: ["id", "curriculum_title", "curriculum_type"],
                                         },
                                     ]
                                 },
@@ -186,22 +185,22 @@ exports.getPresensiById = async (req, res) => {
             ]
         })
 
-        if (!presensi) {
+        if (!attendance) {
             return res.status(404).send({
-                message: "Presensi not found with id=" + id,
+                message: "Attendance not found with id=" + id,
             });
         }
 
-        res.status(200).send(presensi);
+        res.status(200).send(attendance);
     } catch (err) {
         res.status(500).send({
-            message: "Error retrieving Presensi with id=" + id,
+            message: "Error retrieving Attendance with id=" + id,
         });
     }
 };
 
-// Get presensi by User ID
-exports.getPresensiByUserId = async (req, res) => {
+// Get attendance by User ID
+exports.getAttendanceByUserId = async (req, res) => {
     const userId = req.params.userId;
 
     try {
@@ -213,7 +212,7 @@ exports.getPresensiByUserId = async (req, res) => {
             });
         }
 
-        const presensi = await Presensi.findAll({
+        const attendance = await Attendance.findAll({
             include: [{
                 model: UserSchedule,
                 as: "userSchedule",
@@ -224,13 +223,13 @@ exports.getPresensiByUserId = async (req, res) => {
                         as: "schedules",
                         attributes: [
                             "id",
-                            "jenis_client",
-                            "jenis_sesi",
-                            "jenis_kegiatan",
-                            "hari",
-                            "tanggal",
-                            "jam_mulai",
-                            "jam_selesai",
+                            "client_type",
+                            "session_type",
+                            "activity",
+                            "day",
+                            "date",
+                            "start_time",
+                            "finish_time",
                             "status",
                         ]
                     },
@@ -239,33 +238,33 @@ exports.getPresensiByUserId = async (req, res) => {
                         as: "users",
                         attributes: [
                             "id",
-                            "namaDepan",
-                            "namaBelakang",
-                            "posisi",
-                            "jam_kerja",
-                            "cabang",
+                            "first_name",
+                            "last_name",
+                            "position",
+                            "working_hour",
+                            "branch",
                         ],
                     }
                 ]
             }]
         });
 
-        if (!presensi || presensi.length === 0) {
+        if (!attendance || attendance.length === 0) {
             return res.status(404).send({
-                message: `Presensi for user with ID = ${userId} not found!`
+                message: `Attendance for user with ID = ${userId} not found!`
             });
         }
 
-        res.status(200).send(presensi);
+        res.status(200).send(attendance);
     } catch (err) {
         res.status(500).send({
-            message: "Error retrieving Presensi with user_id=" + userId,
+            message: "Error retrieving Attendance with user_id=" + userId,
         });
     }
 }
 
-// Get presensi by Schedule
-exports.getPresensiByScheduleId = async (req, res) => {
+// Get Attendance by Schedule
+exports.getAttendanceByScheduleId = async (req, res) => {
     const scheduleId = req.params.scheduleId;
 
     try {
@@ -277,7 +276,7 @@ exports.getPresensiByScheduleId = async (req, res) => {
             });
         }
 
-        const presensi = await Presensi.findAll({
+        const attendance = await Attendance.findAll({
             include: [{
                 model: UserSchedule,
                 as: "userSchedule",
@@ -288,11 +287,11 @@ exports.getPresensiByScheduleId = async (req, res) => {
                         as: "users",
                         attributes: [
                             "id",
-                            "namaDepan",
-                            "namaBelakang",
-                            "posisi",
-                            "jam_kerja",
-                            "cabang",
+                            "first_name",
+                            "last_name",
+                            "position",
+                            "working_hour",
+                            "branch",
                         ],
                     },
                     {
@@ -300,13 +299,13 @@ exports.getPresensiByScheduleId = async (req, res) => {
                         as: "schedules",
                         attributes: [
                             "id",
-                            "jenis_client",
-                            "jenis_sesi",
-                            "jenis_kegiatan",
-                            "hari",
-                            "tanggal",
-                            "jam_mulai",
-                            "jam_selesai",
+                            "client_type",
+                            "session_type",
+                            "activity",
+                            "day",
+                            "date",
+                            "start_time",
+                            "finish_time",
                             "status",
                         ]
                     }
@@ -314,84 +313,80 @@ exports.getPresensiByScheduleId = async (req, res) => {
             }]
         });
 
-        if (!presensi || presensi.length === 0) {
+        if (!attendance || attendance.length === 0) {
             return res.status(404).send({
-                message: `Presensi for schedule with ID = ${scheduleId} not found!`
+                message: `Attendance for schedule with ID = ${scheduleId} not found!`
             });
         }
 
-        res.status(200).send(presensi);
+        res.status(200).send(attendance);
     } catch (err) {
         res.status(500).send({
-            message: "Error retrieving Presensi with schedule_id=" + scheduleId,
+            message: "Error retrieving Attendance with schedule_id=" + scheduleId,
         });
     }
 }
 
-// Update jam_datang from a Presensi by the id in the request
-exports.updateJamDatang = async (req, res) => {
+// Update arrival_time from a Attendance by the id in the request
+exports.updateArrivalTime = async (req, res) => {
     const id = req.params.id;
-    // const { tanggal, status, jam_datang, status_datang } = req.body.data;
 
     try {
-        const presensi = await Presensi.findByPk(id);
+        const attendance = await Attendance.findByPk(id);
 
-        if (!presensi) {
+        if (!attendance) {
             return res.status(404).send({
-                message: "Presensi not found!",
+                message: "Attendance not found!",
             });
         }
 
-        presensi.tanggal = new Date().toISOString().split("T")[0];
-        presensi.status = "Masuk";
-        presensi.jam_datang = new Date().toTimeString().split(" ")[0];
-        presensi.status_datang = "Sudah Isi";
+        attendance.date = new Date().toISOString().split("T")[0];
+        attendance.status = "Masuk";
+        attendance.arrival_time = new Date().toTimeString().split(" ")[0];
+        attendance.arrival_status = "Sudah Isi";
 
-        await presensi.save();
+        await attendance.save();
 
         res.status(200).send({
-            message: "Presensi was updated successfully!",
+            message: "Attendance was updated successfully!",
         });
     } catch (err) {
         res.status(500).send({
-            message: "Error updating Presensi with id=" + id,
+            message: "Error updating Attendance with id=" + id,
         });
     }
 };
 
-// Update jam_pulang from a Presensi by the id in the request
-exports.updateJamPulang = async (req, res) => {
+// Update jam_pulang from a Attendance by the id in the request
+exports.updateDepartureTime = async (req, res) => {
     const id = req.params.id;
-    // const { jam_pulang, status_pulang } = req.body.data;
 
     try {
-        const presensi = await Presensi.findByPk(id);
+        const attendance = await Attendance.findByPk(id);
 
-        if (!presensi) {
+        if (!attendance) {
             return res.status(404).send({
-                message: "Presensi not found!",
+                message: "Attendance not found!",
             });
         }
 
-        if(!presensi.jam_datang || presensi.status_datang === "Belum Isi") {
+        if(!attendance.arrival_time || attendance.arrival_status === "Belum Isi") {
             return res.status(400).send({
-                message: "Presensi belum diisi jam datang!",
+                message: "Attendance belum diisi jam datang!",
             });
         }
 
-        presensi.jam_pulang = new Date().toTimeString().split(" ")[0];
-        presensi.status_pulang = "Sudah Isi";
+        attendance.departure_time = new Date().toTimeString().split(" ")[0];
+        attendance.departure_status = "Sudah Isi";
 
-        await presensi.save();
+        await attendance.save();
 
         res.status(200).send({
-            message: "Presensi was updated successfully!",
+            message: "Attendance was updated successfully!",
         });
     } catch (err) {
         res.status(500).send({
-            message: "Error updating Presensi with id=" + id,
+            message: "Error updating Attendance with id=" + id,
         });
     }
 };
-
-// 
