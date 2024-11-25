@@ -32,10 +32,19 @@ db.schedule = require("./schedule.model.js")(sequelize, Sequelize);
 db.userSchedule = require("./user_schedule.model.js")(sequelize, Sequelize);
 db.presensi = require("./presensi.model.js")(sequelize, Sequelize);
 db.payroll = require("./payroll.model.js")(sequelize, Sequelize);
+
+db.transport = require("./transport.model.js")(sequelize, Sequelize);
+db.reimbursement = require("./reimbursement.model.js")(sequelize, Sequelize);
+db.privateTransport = require("./private_transport.model.js")(sequelize, Sequelize);
+db.privateTransportData = require("./private_transport_data.model.js")(sequelize, Sequelize);
+db.publicTransport = require("./public_transport.model.js")(sequelize, Sequelize);
+db.perbehentian = require("./perbehentian.model.js")(sequelize, Sequelize);
+
 db.partner = require("./partner.model.js")(sequelize, Sequelize);
 db.student = require("./student.model.js")(sequelize, Sequelize);
 db.materi = require("./materi.model.js")(sequelize, Sequelize);
 db.pertemuan = require("./pertemuan.model.js")(sequelize, Sequelize);
+
 db.message = require("./message.model.js")(sequelize, Sequelize);
 db.messageRecipient = require("./message_recipient.model.js")(sequelize, Sequelize);
 
@@ -99,6 +108,31 @@ db.payroll.hasMany(db.presensi, { foreignKey: 'payroll_id', as: 'presensi' });
 db.presensi.belongsTo(db.payroll, { foreignKey: 'payroll_id', as: 'payroll' });
 
 
+//* Transport - Reimbursement relationship
+db.reimbursement.hasMany(db.transport, { foreignKey: 'reimbursement_id', as: 'transports' });
+db.transport.belongsTo(db.reimbursement, { foreignKey: 'reimbursement_id', as: 'reimbursement' });
+
+
+//* Transport - Public-Transport relationship
+db.transport.hasOne(db.publicTransport, { foreignKey: 'transport_id', as: 'publicTransport' });
+db.publicTransport.belongsTo(db.transport, { foreignKey: 'transport_id', as: 'transport' });
+
+
+//* PublicTransport - Perbehentian relationship
+db.publicTransport.hasMany(db.perbehentian, { foreignKey: 'public_transport_id', as: 'perbehentians' });
+db.perbehentian.belongsTo(db.publicTransport, { foreignKey: 'public_transport_id', as: 'publicTransport' });
+
+
+//* Transport - Private-Transport relationship
+db.transport.hasOne(db.privateTransport, { foreignKey: 'transport_id', as: 'privateTransport' });
+db.privateTransport.belongsTo(db.transport, { foreignKey: 'transport_id', as: 'transport' });
+
+
+//* PrivateTransport - PrivateTransportData relationship
+db.privateTransport.hasMany(db.privateTransportData, { foreignKey: 'private_transport_id', as: 'privateTransportData' });
+db.privateTransportData.belongsTo(db.privateTransport, { foreignKey: 'private_transport_id', as: 'privateTransport' });
+
+
 //* Materi - Pertemuan relationship
 db.materi.hasMany(db.pertemuan, { foreignKey: 'id_materi', as: 'pertemuan' });
 db.pertemuan.belongsTo(db.materi, { foreignKey: 'id_materi', as: 'materi' });
@@ -121,7 +155,16 @@ console.log("User Associations:", db.user.associations);
 console.log("Schedule Associations:", db.schedule.associations);
 console.log("UserSchedule Associations:", db.userSchedule.associations);
 console.log("Presensi Associations:", db.presensi.associations);
-
+console.log("Payroll Associations:", db.payroll.associations);
+console.log("");
+console.log("");
+console.log("");
+console.log("Transport Associations:", db.transport.associations);
+console.log("Reimbursement Associations:", db.reimbursement.associations);
+console.log("PrivateTransport Associations:", db.privateTransport.associations);
+console.log("PrivateTransportData Associations:", db.privateTransportData.associations);
+console.log("PublicTransport Associations:", db.publicTransport.associations);
+console.log("Perbehentian Associations:", db.perbehentian.associations);
 
 
 module.exports = db;

@@ -331,7 +331,7 @@ exports.getPresensiByScheduleId = async (req, res) => {
 // Update jam_datang from a Presensi by the id in the request
 exports.updateJamDatang = async (req, res) => {
     const id = req.params.id;
-    const { tanggal, status, jam_datang, status_datang } = req.body.data;
+    // const { tanggal, status, jam_datang, status_datang } = req.body.data;
 
     try {
         const presensi = await Presensi.findByPk(id);
@@ -344,8 +344,8 @@ exports.updateJamDatang = async (req, res) => {
 
         presensi.tanggal = new Date().toISOString().split("T")[0];
         presensi.status = "Masuk";
-        presensi.jam_datang = jam_datang || new Date().toTimeString().split(" ")[0];
-        presensi.status_datang = status_datang || "Sudah Isi";
+        presensi.jam_datang = new Date().toTimeString().split(" ")[0];
+        presensi.status_datang = "Sudah Isi";
 
         await presensi.save();
 
@@ -362,7 +362,7 @@ exports.updateJamDatang = async (req, res) => {
 // Update jam_pulang from a Presensi by the id in the request
 exports.updateJamPulang = async (req, res) => {
     const id = req.params.id;
-    const { jam_pulang, status_pulang } = req.body.data;
+    // const { jam_pulang, status_pulang } = req.body.data;
 
     try {
         const presensi = await Presensi.findByPk(id);
@@ -379,8 +379,8 @@ exports.updateJamPulang = async (req, res) => {
             });
         }
 
-        presensi.jam_pulang = jam_pulang || new Date().toTimeString().split(" ")[0];
-        presensi.status_pulang = status_pulang || "Sudah Isi";
+        presensi.jam_pulang = new Date().toTimeString().split(" ")[0];
+        presensi.status_pulang = "Sudah Isi";
 
         await presensi.save();
 
