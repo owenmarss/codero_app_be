@@ -82,7 +82,7 @@ exports.getAllSession = (req, res) => {
         });
 }
 
-// Get Session by Curriculum ID
+// Get All Session by Curriculum ID
 exports.getAllSessionByCurriculumId = (req, res) => {
     const id = req.params.id;
 
@@ -98,6 +98,39 @@ exports.getAllSessionByCurriculumId = (req, res) => {
     })
         .then((session) => {
             if (session.length === 0) {
+                res.status(404).send({
+                    message: "Session not found!",
+                });
+            }
+
+            res.status(200).send(session);
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message:
+                    err.message ||
+                    "Some error occurred while retrieving Session.",
+            });
+        });
+};
+
+// Get A Session by Curriculum ID and Index Session
+exports.getSessionByCurriculumIdAndIndexSession = (req, res) => {
+    const id_curriculum = req.params.id_curriculum;
+    const index_session = req.params.index_session;
+
+    Session.findOne({
+        where: { id_curriculum: id_curriculum, index_session: index_session },
+        include: [
+            {
+                model: Curriculum,
+                as: "curriculum",
+                attributes: ["id", "curriculum_title"],
+            },
+        ],
+    })
+        .then((session) => {
+            if (!session) {
                 res.status(404).send({
                     message: "Session not found!",
                 });

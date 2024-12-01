@@ -182,6 +182,45 @@ exports.getCurriculumById = (req, res) => {
         });
 };
 
+// Get All Session by Curriculum id
+exports.getCurriculumWithSessions = (req, res) => {
+    const id  = req.params.id;
+
+    Curriculum.findByPk(id, {
+        include: [
+            {
+                model: Session,
+                as: "sessions",
+                attributes: [
+                    "id",
+                    "session_title",
+                    "index_session",
+                ],
+            },
+        ],
+        order: [
+            [{ model: Session, as: "sessions" }, "index_session", "ASC"],
+        ],
+    })
+    .then((curriculum) => {
+        if (!curriculum) {
+            return res.status(404).send({
+                message: "Curriculum not found!",
+            });
+        }
+
+        res.status(200).send(curriculum);
+    })
+    .catch((err) => {
+        res.status(500).send({
+            message:
+                err.message ||
+                "Some error occurred while retrieving Curriculum.",
+        });
+    });
+}
+
+
 // Update a Curriculum by id
 exports.updateCurriculum = (req, res) => {
     const id = req.params.id;

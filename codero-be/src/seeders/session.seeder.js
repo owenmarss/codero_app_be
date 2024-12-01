@@ -19,7 +19,7 @@ const seedSession = async () => {
             link_video: null,
         },
         {
-            id_curriculum: 2, // References "Robotics for Beginners"
+            id_curriculum: 8, // References "Robotics for Beginners"
             index_session: 1,
             session_title: "Introduction to Robotics",
             session_content: "Welcome to the basics of Robotics!",
@@ -27,7 +27,7 @@ const seedSession = async () => {
             link_video: "https://www.youtube.com/watch?v=1xqcd7j2K6A",
         },
         {
-            id_curriculum: 2, // References "Robotics for Beginners"
+            id_curriculum: 8, // References "Robotics for Beginners"
             index_session: 2,
             session_title: "Building Your First Robot",
             session_content: "Let's build your first robot!",

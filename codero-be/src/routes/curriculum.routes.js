@@ -12,6 +12,7 @@ router.get('/filter', authMiddleware, curriculum.getAllCurriculumLimit);
 router.get('/coding', authMiddleware, curriculum.getAllCurriculumCoding);
 router.get('/robotic', authMiddleware, curriculum.getAllCurriculumRobotic);
 router.get('/:id', authMiddleware, curriculum.getCurriculumById);
+router.get('/:id/sessions', authMiddleware, curriculum.getCurriculumWithSessions);
 router.put('/:id', authMiddleware, curriculum.updateCurriculum);
 router.delete('/:id', authMiddleware, curriculum.deleteCurriculum);
 

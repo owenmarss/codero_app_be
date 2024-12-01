@@ -134,8 +134,8 @@ db.privateTransportData.belongsTo(db.privateTransport, { foreignKey: 'private_tr
 
 
 //* Curriculum - Session relationship
-db.curriculum.hasMany(db.session, { foreignKey: 'id_session', as: 'session' });
-db.session.belongsTo(db.curriculum, { foreignKey: 'id_session', as: 'curriculum' });
+db.curriculum.hasMany(db.session, { foreignKey: 'id_curriculum', as: 'sessions' });
+db.session.belongsTo(db.curriculum, { foreignKey: 'id_curriculum', as: 'curriculum' });
 
 
 //* Message - Recipient relationship
