@@ -27,8 +27,10 @@ const checkPosisi = (position) => {
             });
         }
 
-        req.employee_id = decoded.id;
-        req.position = decoded.role;
+        req.id = decoded.id;
+        req.employee_id = decoded.employee_id;
+        req.position = decoded.position;
+        req.working_hour = decoded.working_hour;
         console.log("berhasil");
         
         next();

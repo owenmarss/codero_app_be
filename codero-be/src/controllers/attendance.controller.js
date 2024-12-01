@@ -1,15 +1,17 @@
 const db = require("../models");
 const Attendance = db.attendance;
-const UserSchedule = db.userSchedule;
 const User = db.user;
+const UserSchedule = db.userSchedule;
 const Schedule = db.schedule;
+const Transport = db.transport;
 const Partner = db.partner;
 const Student = db.student;
 const Curriculum = db.curriculum;
 
 // Create and Save a new Attendance
 exports.createAttendance = async (req, res) => {
-    const { user_schedule_id, date, arrival_time, status, arrival_status } = req.body.data;
+    const { user_schedule_id, date, arrival_time, status, arrival_status } =
+        req.body.data;
 
     try {
         const userSchedule = await UserSchedule.findByPk(user_schedule_id);
@@ -83,9 +85,13 @@ exports.getAllAttendance = async (req, res) => {
                                         {
                                             model: Curriculum,
                                             as: "curriculum",
-                                            attributes: ["id", "curriculum_title", "curriculum_type"],
+                                            attributes: [
+                                                "id",
+                                                "curriculum_title",
+                                                "curriculum_type",
+                                            ],
                                         },
-                                    ]
+                                    ],
                                 },
                                 {
                                     model: Student,
@@ -95,11 +101,15 @@ exports.getAllAttendance = async (req, res) => {
                                         {
                                             model: Curriculum,
                                             as: "curriculum",
-                                            attributes: ["id", "curriculum_title", "curriculum_type"],
+                                            attributes: [
+                                                "id",
+                                                "curriculum_title",
+                                                "curriculum_type",
+                                            ],
                                         },
-                                    ]
+                                    ],
                                 },
-                            ]
+                            ],
                         },
                     ],
                 },
@@ -111,7 +121,8 @@ exports.getAllAttendance = async (req, res) => {
         console.error("Error in getAllAttendance:", err); // Log error
         res.status(500).send({
             message:
-                err.message || "Some error occurred while retrieving Attendance.",
+                err.message ||
+                "Some error occurred while retrieving Attendance.",
         });
     }
 };
@@ -162,9 +173,13 @@ exports.getAttendanceById = async (req, res) => {
                                         {
                                             model: Curriculum,
                                             as: "curriculum",
-                                            attributes: ["id", "curriculum_title", "curriculum_type"],
+                                            attributes: [
+                                                "id",
+                                                "curriculum_title",
+                                                "curriculum_type",
+                                            ],
                                         },
-                                    ]
+                                    ],
                                 },
                                 {
                                     model: Student,
@@ -174,16 +189,20 @@ exports.getAttendanceById = async (req, res) => {
                                         {
                                             model: Curriculum,
                                             as: "curriculum",
-                                            attributes: ["id", "curriculum_title", "curriculum_type"],
+                                            attributes: [
+                                                "id",
+                                                "curriculum_title",
+                                                "curriculum_type",
+                                            ],
                                         },
-                                    ]
+                                    ],
                                 },
-                            ]
+                            ],
                         },
                     ],
                 },
-            ]
-        })
+            ],
+        });
 
         if (!attendance) {
             return res.status(404).send({
@@ -213,45 +232,81 @@ exports.getAttendanceByUserId = async (req, res) => {
         }
 
         const attendance = await Attendance.findAll({
-            include: [{
-                model: UserSchedule,
-                as: "userSchedule",
-                where: { user_id: userId },
-                include: [
-                    {
-                        model: Schedule,
-                        as: "schedules",
-                        attributes: [
-                            "id",
-                            "client_type",
-                            "session_type",
-                            "activity",
-                            "day",
-                            "date",
-                            "start_time",
-                            "finish_time",
-                            "status",
-                        ]
-                    },
-                    {
-                        model: User,
-                        as: "users",
-                        attributes: [
-                            "id",
-                            "first_name",
-                            "last_name",
-                            "position",
-                            "working_hour",
-                            "branch",
-                        ],
-                    }
-                ]
-            }]
+            include: [
+                {
+                    model: UserSchedule,
+                    as: "userSchedule",
+                    where: { user_id: userId },
+                    include: [
+                        {
+                            model: Schedule,
+                            as: "schedules",
+                            attributes: [
+                                "id",
+                                "client_type",
+                                "session_type",
+                                "activity",
+                                "day",
+                                "date",
+                                "start_time",
+                                "finish_time",
+                                "status",
+                            ],
+                            include: [
+                                {
+                                    model: Partner,
+                                    as: "partner",
+                                    attributes: ["id", "name", "id_curriculum", "address"],
+                                    include: [
+                                        {
+                                            model: Curriculum,
+                                            as: "curriculum",
+                                            attributes: [
+                                                "id",
+                                                "curriculum_title",
+                                                "curriculum_type",
+                                            ],
+                                        },
+                                    ],
+                                },
+                                {
+                                    model: Student,
+                                    as: "student",
+                                    attributes: ["id", "name", "id_curriculum", "address"],
+                                    include: [
+                                        {
+                                            model: Curriculum,
+                                            as: "curriculum",
+                                            attributes: [
+                                                "id",
+                                                "curriculum_title",
+                                                "curriculum_type",
+                                            ],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                        {
+                            model: User,
+                            as: "users",
+                            attributes: [
+                                "id",
+                                "first_name",
+                                "last_name",
+                                "position",
+                                "working_hour",
+                                "branch",
+                            ],
+                        },
+                    ],
+                },
+            ],
         });
 
         if (!attendance || attendance.length === 0) {
             return res.status(404).send({
-                message: `Attendance for user with ID = ${userId} not found!`
+                message: `Attendance for user with ID = ${userId} not found!`,
             });
         }
 
@@ -261,7 +316,7 @@ exports.getAttendanceByUserId = async (req, res) => {
             message: "Error retrieving Attendance with user_id=" + userId,
         });
     }
-}
+};
 
 // Get Attendance by Schedule
 exports.getAttendanceByScheduleId = async (req, res) => {
@@ -277,55 +332,58 @@ exports.getAttendanceByScheduleId = async (req, res) => {
         }
 
         const attendance = await Attendance.findAll({
-            include: [{
-                model: UserSchedule,
-                as: "userSchedule",
-                where: { schedule_id: scheduleId },
-                include: [
-                    {
-                        model: User,
-                        as: "users",
-                        attributes: [
-                            "id",
-                            "first_name",
-                            "last_name",
-                            "position",
-                            "working_hour",
-                            "branch",
-                        ],
-                    },
-                    {
-                        model: Schedule,
-                        as: "schedules",
-                        attributes: [
-                            "id",
-                            "client_type",
-                            "session_type",
-                            "activity",
-                            "day",
-                            "date",
-                            "start_time",
-                            "finish_time",
-                            "status",
-                        ]
-                    }
-                ]
-            }]
+            include: [
+                {
+                    model: UserSchedule,
+                    as: "userSchedule",
+                    where: { schedule_id: scheduleId },
+                    include: [
+                        {
+                            model: User,
+                            as: "users",
+                            attributes: [
+                                "id",
+                                "first_name",
+                                "last_name",
+                                "position",
+                                "working_hour",
+                                "branch",
+                            ],
+                        },
+                        {
+                            model: Schedule,
+                            as: "schedules",
+                            attributes: [
+                                "id",
+                                "client_type",
+                                "session_type",
+                                "activity",
+                                "day",
+                                "date",
+                                "start_time",
+                                "finish_time",
+                                "status",
+                            ],
+                        },
+                    ],
+                },
+            ],
         });
 
         if (!attendance || attendance.length === 0) {
             return res.status(404).send({
-                message: `Attendance for schedule with ID = ${scheduleId} not found!`
+                message: `Attendance for schedule with ID = ${scheduleId} not found!`,
             });
         }
 
         res.status(200).send(attendance);
     } catch (err) {
         res.status(500).send({
-            message: "Error retrieving Attendance with schedule_id=" + scheduleId,
+            message:
+                "Error retrieving Attendance with schedule_id=" + scheduleId,
         });
     }
-}
+};
 
 // Update arrival_time from a Attendance by the id in the request
 exports.updateArrivalTime = async (req, res) => {
@@ -362,7 +420,21 @@ exports.updateDepartureTime = async (req, res) => {
     const id = req.params.id;
 
     try {
-        const attendance = await Attendance.findByPk(id);
+        const attendance = await Attendance.findByPk(id, {
+            include: [
+                {
+                    model: UserSchedule,
+                    as: "userSchedule",
+                    include: [
+                        {
+                            model: Schedule,
+                            as: "schedules",
+                            attributes: ["session_type"],
+                        },
+                    ],
+                },
+            ],
+        });
 
         if (!attendance) {
             return res.status(404).send({
@@ -370,16 +442,39 @@ exports.updateDepartureTime = async (req, res) => {
             });
         }
 
-        if(!attendance.arrival_time || attendance.arrival_status === "Belum Isi") {
+        if (
+            !attendance.arrival_time ||
+            attendance.arrival_status === "Belum Isi"
+        ) {
             return res.status(400).send({
                 message: "Attendance belum diisi jam datang!",
             });
         }
 
+        //* Update departure & save
         attendance.departure_time = new Date().toTimeString().split(" ")[0];
         attendance.departure_status = "Sudah Isi";
-
         await attendance.save();
+
+        //* Check if transport record needs to be created
+        const sessionType = attendance.userSchedule.schedules.session_type;
+        if (
+            sessionType === "Onsite" &&
+            attendance.arrival_time &&
+            attendance.departure_time &&
+            attendance.arrival_status === "Sudah Isi" &&
+            attendance.departure_status === "Sudah Isi"
+        ) {
+            const transportRecord = await Transport.create({
+                attendance_id: attendance.id,
+                type: null,
+                reimbursement_id: null,
+            });
+
+            console.log("Transport record created:"
+                // , transportRecord
+            );
+        }
 
         res.status(200).send({
             message: "Attendance was updated successfully!",

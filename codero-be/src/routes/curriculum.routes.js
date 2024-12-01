@@ -8,6 +8,7 @@ const checkPosisi = require('../middlewares/role.middleware.js');
 // Create a new Materi
 router.post('/', authMiddleware, curriculum.createCurriculum);
 router.get('/', authMiddleware, curriculum.getAllCurriculum);
+router.get('/filter', authMiddleware, curriculum.getAllCurriculumLimit);
 router.get('/coding', authMiddleware, curriculum.getAllCurriculumCoding);
 router.get('/robotic', authMiddleware, curriculum.getAllCurriculumRobotic);
 router.get('/:id', authMiddleware, curriculum.getCurriculumById);

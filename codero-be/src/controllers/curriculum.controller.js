@@ -1,3 +1,4 @@
+const { where } = require("sequelize");
 const db = require("../models");
 const Curriculum = db.curriculum;
 const Session = db.session;
@@ -68,6 +69,46 @@ exports.getAllCurriculum = (req, res) => {
             });
         });
 };
+
+// Get 6 datas of each curriculum
+exports.getAllCurriculumLimit = async (req, res) => {
+    const { page = 1, limit = 6 } = req.query;
+
+    try {
+        const coding = await Curriculum.findAndCountAll({
+            where: { curriculum_type: "Coding" },
+            limit: limit,
+            offset: (page - 1) * limit,
+        });
+
+        const robotic = await Curriculum.findAndCountAll({
+            where: { curriculum_type: "Robotic" },
+            limit: limit,
+            offset: (page - 1) * limit,
+        });
+
+        res.status(200).send({
+            coding: {
+                total: coding.count,
+                currentPage: parseInt(page),
+                totalPages: Math.ceil(coding.count / limit),
+                coding_data: coding.rows,
+            },
+            robotic: {
+                total: robotic.count,
+                currentPage: parseInt(page),
+                totalPages: Math.ceil(robotic.count / limit),
+                robotic_data: robotic.rows,
+            },
+        });
+    } catch (error) {
+        res.status(500).send({
+            message:
+                error.message ||
+                "Some error occurred while retrieving Curriculum.",
+        });
+    }
+}
 
 // Get all Curriculum with curriculum_type = "Coding"
 exports.getAllCurriculumCoding = (req, res) => {
@@ -144,7 +185,7 @@ exports.getCurriculumById = (req, res) => {
 // Update a Curriculum by id
 exports.updateCurriculum = (req, res) => {
     const id = req.params.id;
-    const { curriculum_title, curriculum_type, tools, total_session } = req.body.data;
+    const { curriculum_title, curriculum_type, technology, tools, total_session } = req.body.data;
 
     // Validate request
     if (!curriculum_title || !curriculum_type || !total_session) {
@@ -157,6 +198,7 @@ exports.updateCurriculum = (req, res) => {
         {
             curriculum_title: curriculum_title,
             curriculum_type: curriculum_type,
+            technology: technology,
             tools: tools,
             total_session: total_session,
         },

@@ -10,6 +10,10 @@ module.exports = (sequelize, Sequelize) => {
             type: DataTypes.ENUM('Coding', 'Robotic'),
             allowNull: false,
         },
+        technology: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         tools: {
             type: DataTypes.STRING,
             allowNull: true,

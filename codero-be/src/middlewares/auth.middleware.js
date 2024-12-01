@@ -19,6 +19,6 @@ module.exports = (req, res, next) => {
         });
     }
 
-    req.employee_id = decoded.id;
+    req.id = decoded.id;
     next();
 }
