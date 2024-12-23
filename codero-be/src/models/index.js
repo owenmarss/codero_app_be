@@ -28,9 +28,17 @@ db.sequelize = sequelize;
 
 // Define models
 db.user = require("./user.model.js")(sequelize, Sequelize);
+
+// ? Akan diubah
 db.schedule = require("./schedule.model.js")(sequelize, Sequelize);
+
+// ? Akan diubah
 db.userSchedule = require("./user_schedule.model.js")(sequelize, Sequelize);
+
+// ? Akan diubah
 db.attendance = require("./attendance.model.js")(sequelize, Sequelize);
+
+// ? Akan diubah
 db.payroll = require("./payroll.model.js")(sequelize, Sequelize);
 
 db.transport = require("./transport.model.js")(sequelize, Sequelize);
@@ -69,14 +77,6 @@ db.partner.hasMany(db.schedule, { foreignKey: 'partner_id', as: 'schedules' });
 db.schedule.belongsTo(db.student, { foreignKey: 'student_id', as: 'student' });
 db.student.hasMany(db.schedule, { foreignKey: 'student_id', as: 'schedules' });
 
-
-//* User - Schedule relationship via user_schedule
-// ? One-to-Many relationship
-// db.user.hasMany(db.userSchedule, { foreignKey: 'user_id', as: 'userSchedule' });
-// db.userSchedule.belongsTo(db.user, { foreignKey: 'user_id',  as: 'user' });
-
-// db.schedule.hasMany(db.userSchedule, { foreignKey: 'schedule_id', as: 'userSchedule' });
-// db.userSchedule.belongsTo(db.schedule, { foreignKey: 'schedule_id', as: 'schedule' });
 
 // ? Many-to-Many relationship
 db.user.belongsToMany(db.schedule, {
@@ -152,19 +152,26 @@ db.messageRecipient.belongsTo(db.user, { foreignKey: 'id_recipient', as: 'recipi
 // Console log
 // index.js (or equivalent)
 console.log("User Associations:", db.user.associations);
+console.log("");
+
 console.log("Schedule Associations:", db.schedule.associations);
+console.log("");
+
 console.log("UserSchedule Associations:", db.userSchedule.associations);
+console.log("");
+
 console.log("Attendance Associations:", db.attendance.associations);
+console.log("");
+
 console.log("Payroll Associations:", db.payroll.associations);
 console.log("");
-console.log("");
-console.log("");
-console.log("Transport Associations:", db.transport.associations);
-console.log("Reimbursement Associations:", db.reimbursement.associations);
-console.log("PrivateTransport Associations:", db.privateTransport.associations);
-console.log("PrivateTransportData Associations:", db.privateTransportData.associations);
-console.log("PublicTransport Associations:", db.publicTransport.associations);
-console.log("PublicTransportData Associations:", db.publicTransportData.associations);
+
+// console.log("Transport Associations:", db.transport.associations);
+// console.log("Reimbursement Associations:", db.reimbursement.associations);
+// console.log("PrivateTransport Associations:", db.privateTransport.associations);
+// console.log("PrivateTransportData Associations:", db.privateTransportData.associations);
+// console.log("PublicTransport Associations:", db.publicTransport.associations);
+// console.log("PublicTransportData Associations:", db.publicTransportData.associations);
 
 
 

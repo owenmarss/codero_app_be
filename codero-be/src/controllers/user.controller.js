@@ -192,6 +192,7 @@ exports.updatePassword = (req, res) => {
 exports.updateUserDetails = (req, res) => {
     const id = req.params.id;
     const {
+        employee_id,
         first_name,
         last_name,
         gender,
@@ -205,6 +206,7 @@ exports.updateUserDetails = (req, res) => {
         branch,
         npwp,
         bank,
+        picture,
         account_number
     } = req.body;
 
@@ -215,6 +217,7 @@ exports.updateUserDetails = (req, res) => {
     // }
 
     const updateData = {};
+    if(employee_id) updateData.employee_id = employee_id;
     if (first_name) updateData.first_name = first_name;
     if (last_name) updateData.last_name = last_name;
     if (gender) updateData.gender = gender;
@@ -228,6 +231,7 @@ exports.updateUserDetails = (req, res) => {
     if (branch) updateData.branch = branch;
     if (npwp) updateData.npwp = npwp;
     if (bank) updateData.bank = bank;
+    if (picture) updateData.picture = picture;
     if (account_number) updateData.account_number = account_number;
 
     User.update(updateData, {

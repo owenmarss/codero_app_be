@@ -7,6 +7,7 @@ const Transport = db.transport;
 const Partner = db.partner;
 const Student = db.student;
 const Curriculum = db.curriculum;
+const bcrypt = require("bcryptjs");
 
 // Create and Save a new Attendance
 exports.createAttendance = async (req, res) => {
@@ -168,7 +169,7 @@ exports.getAttendanceById = async (req, res) => {
                                 {
                                     model: Partner,
                                     as: "partner",
-                                    attributes: ["id", "name", "id_curriculum"],
+                                    attributes: ["id", "name", "id_curriculum", "address"],
                                     include: [
                                         {
                                             model: Curriculum,
@@ -184,7 +185,7 @@ exports.getAttendanceById = async (req, res) => {
                                 {
                                     model: Student,
                                     as: "student",
-                                    attributes: ["id", "name", "id_curriculum"],
+                                    attributes: ["id", "name", "id_curriculum", "address"],
                                     include: [
                                         {
                                             model: Curriculum,
@@ -388,13 +389,42 @@ exports.getAttendanceByScheduleId = async (req, res) => {
 // Update arrival_time from a Attendance by the id in the request
 exports.updateArrivalTime = async (req, res) => {
     const id = req.params.id;
+    const { password } = req.body.data;
 
     try {
-        const attendance = await Attendance.findByPk(id);
+        const attendance = await Attendance.findByPk(id, {
+            include: [
+                {
+                    model: UserSchedule,
+                    as: "userSchedule",
+                    include: [
+                        {
+                            model: User,
+                            as: "users",
+                            attributes: ["id", "password"],
+                        }
+                    ]
+                }
+            ]
+        });
 
         if (!attendance) {
             return res.status(404).send({
                 message: "Attendance not found!",
+            });
+        }
+
+        const user = attendance.userSchedule.users;
+        if (!user) {
+            return res.status(404).send({
+                message: "User not found!",
+            });
+        }
+
+        const passwordIsValid = bcrypt.compareSync(password, user.password);
+        if (!passwordIsValid) {
+            return res.status(401).send({
+                message: "Invalid Password!",
             });
         }
 
@@ -418,6 +448,7 @@ exports.updateArrivalTime = async (req, res) => {
 // Update jam_pulang from a Attendance by the id in the request
 exports.updateDepartureTime = async (req, res) => {
     const id = req.params.id;
+    const { password } = req.body.data;
 
     try {
         const attendance = await Attendance.findByPk(id, {
@@ -427,9 +458,9 @@ exports.updateDepartureTime = async (req, res) => {
                     as: "userSchedule",
                     include: [
                         {
-                            model: Schedule,
-                            as: "schedules",
-                            attributes: ["session_type"],
+                            model: User,
+                            as: "users",
+                            attributes: ["id", "password"],
                         },
                     ],
                 },
@@ -439,6 +470,18 @@ exports.updateDepartureTime = async (req, res) => {
         if (!attendance) {
             return res.status(404).send({
                 message: "Attendance not found!",
+            });
+        }
+
+        const user = attendance.userSchedule.users;
+        if (!user) {
+            return res.status(404).send({ message: "User not found!" });
+        }
+
+        const passwordIsValid = bcrypt.compareSync(password, user.password);
+        if (!passwordIsValid) {
+            return res.status(401).send({
+                message: "Invalid Password!",
             });
         }
 
@@ -457,24 +500,22 @@ exports.updateDepartureTime = async (req, res) => {
         await attendance.save();
 
         //* Check if transport record needs to be created
-        const sessionType = attendance.userSchedule.schedules.session_type;
-        if (
-            sessionType === "Onsite" &&
-            attendance.arrival_time &&
-            attendance.departure_time &&
-            attendance.arrival_status === "Sudah Isi" &&
-            attendance.departure_status === "Sudah Isi"
-        ) {
-            const transportRecord = await Transport.create({
-                attendance_id: attendance.id,
-                type: null,
-                reimbursement_id: null,
-            });
+        // const sessionType = attendance.userSchedule.schedules.session_type;
+        // if (
+        //     attendance.arrival_time &&
+        //     attendance.departure_time &&
+        //     attendance.arrival_status === "Sudah Isi" &&
+        //     attendance.departure_status === "Sudah Isi"
+        // ) {
+        //     const transportRecord = await Transport.create({
+        //         attendance_id: attendance.id,
+        //         type: null,
+        //         reimbursement_id: null,
+        //     });
 
-            console.log("Transport record created:"
-                // , transportRecord
-            );
-        }
+        //     console.log("Transport record created:"
+        //     );
+        // }
 
         res.status(200).send({
             message: "Attendance was updated successfully!",
