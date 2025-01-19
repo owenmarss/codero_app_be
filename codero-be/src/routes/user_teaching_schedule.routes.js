@@ -27,6 +27,12 @@ router.put('/update-schedules', authMiddleware, user_teaching_schedule.updateSch
 // ? Update users for Schedule
 router.put('/update-users', authMiddleware, user_teaching_schedule.updateUsersForSchedule);
 
+// ? Mark one schedule as done
+router.put('/mark-one-as-done/:id', authMiddleware, user_teaching_schedule.markOneAsDone);
+
+// ? Mark multiple schedules as done
+router.put('/mark-multiple-as-done', authMiddleware, user_teaching_schedule.markMultipleAsDone);
+
 // ? Delete schedules for User
 router.delete('/delete-schedules', authMiddleware, user_teaching_schedule.deleteSchedulesForUser);
 

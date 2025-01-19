@@ -25,6 +25,11 @@ module.exports = (sequelize, Sequelize) => {
             },
             onDelete: 'CASCADE'
         },
+        status: {
+            type: DataTypes.ENUM('Selesai', 'Belum Selesai'),
+            allowNull: true,
+            defaultValue: 'Belum Selesai'
+        }
     })
 
     return UserTeachingSchedule;

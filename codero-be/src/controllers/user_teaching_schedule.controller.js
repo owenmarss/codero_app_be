@@ -338,6 +338,81 @@ exports.updateUsersForSchedule = async (req, res) => {
     }
 }
 
+// ? Mark one schedule as done
+exports.markOneAsDone = async (req, res) => {
+    const id = req.params.id; // ID of the user_teaching_schedule record
+
+    if(!id) {
+        return res.status(400).send({
+            message: "ID is required!",
+        });
+    }
+
+    try {
+        const userTeachingSchedule = await UserTeachingSchedule.findByPk(id);
+
+        if (!userTeachingSchedule) {
+            return res.status(404).send({
+                message: "User Teaching Schedule not found!",
+            });
+        }
+
+        await userTeachingSchedule.update({
+            status: "Selesai",
+        });
+
+        res.status(200).send({
+            message: "User Teaching Schedule was updated successfully!",
+        });
+    } catch (err) {
+        res.status(500).send({
+            message: err.message || "Error updating User Teaching Schedule!",
+        });
+    }
+}
+
+// ? Mark multiple schedules as done
+exports.markMultipleAsDone = async (req, res) => {
+    const { user_teaching_schedule_ids } = req.body.data;
+
+    if (!Array.isArray(user_teaching_schedule_ids)) {
+        return res.status(400).send({
+            message: "An array of User Teaching Schedule IDs is required!",
+        });
+    }
+
+    try {
+        const userTeachingSchedules = await UserTeachingSchedule.findAll({
+            where: {
+                id: user_teaching_schedule_ids,
+            }
+        });
+
+        if (userTeachingSchedules.length === 0) {
+            return res.status(404).send({
+                message: "No User Teaching Schedules found!",
+            });
+        }
+
+        await UserTeachingSchedule.update({
+            status: "Selesai",
+        }, {
+            where: {
+                id: user_teaching_schedule_ids,
+            }
+        });
+
+        res.status(200).send({
+            message: "User Teaching Schedules were updated successfully!",
+        });
+    } catch (err) {
+        res.status(500).send({
+            message: err.message || "Error updating User Teaching Schedules!",
+        });
+    }
+};
+
+
 // ? Delete the schedules associated with a user
 exports.deleteSchedulesForUser = async (req, res) => {
     const { user_id, teaching_schedule_ids  } = req.body.data;
