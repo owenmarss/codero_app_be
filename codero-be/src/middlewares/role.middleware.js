@@ -2,6 +2,7 @@ const { verifyToken } = require('../utils/jwt.utils');
 
 const checkPosisi = (position) => {
     return (req, res, next) => {
+        
         var token = req.headers['authorization'];
         token = token.replace('Bearer ', '');
         

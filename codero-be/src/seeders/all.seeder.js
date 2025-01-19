@@ -1,15 +1,16 @@
 const db = require("../models");
-const seedUsers = require("./user.seeder"); // Path to user seeder
-const seedMessages = require("./message.seeder"); // Path to message seeder
-const seedMessageRecipients = require("./message_recipient.seeder"); // Path to message_recipient seeder
-const seedCurriculum = require("./curriculum.seeder"); // Path to curriculum seeder
-const seedSession = require("./session.seeder"); // Path to session seeder
-const seedPartner = require("./partner.seeder"); // Path to partner seeder
-const seedStudent = require("./student.seeder") // Path to student seeder
-const seedSchedule = require("./schedule.seeder") // Path to schedule seeder
-const seedUserSchedule = require("./user_schedule.seeder") // Path to user_schedule seeder
-const seedAttendance = require("./attendance.seeder") // Path to attendance seeder
-const seedPayroll = require("./payroll.seeder") // Path to payroll seeder
+const seedUsers = require("./user.seeder");
+const seedMessages = require("./message.seeder");
+const seedMessageRecipients = require("./message_recipient.seeder");
+const seedCurriculum = require("./curriculum.seeder");
+const seedSession = require("./session.seeder");
+const seedPartner = require("./partner.seeder");
+const seedStudent = require("./student.seeder")
+
+const seedTeachingSchedule = require("./teaching_schedule.seeder")
+const seedUserTeachingSchedule = require("./user_teaching_schedule.seeder")
+const seedTeachingAttendance = require("./teaching_attendance.seeder")
+const seedTeachingPayroll = require("./teaching_payroll.seeder")
 
 const seedAll = async () => {
     try {
@@ -39,16 +40,16 @@ const seedAll = async () => {
         await seedStudent();
 
         //* Seed schedules
-        await seedSchedule();
+        await seedTeachingSchedule();
 
         //* Seed user schedules
-        await seedUserSchedule();
+        await seedUserTeachingSchedule();
 
         //* Seed presensi
-        await seedAttendance();
+        await seedTeachingAttendance();
 
         //* Seed payrolls
-        await seedPayroll();
+        await seedTeachingPayroll();
 
         console.log("All data seeded successfully.");
     } catch (error) {

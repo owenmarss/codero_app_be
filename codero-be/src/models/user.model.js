@@ -6,6 +6,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: true,
         },
+        card_uid: {
+            type: Sequelize.STRING,
+            allowNull: true,
+        },
         first_name: {
             type: Sequelize.STRING,
             allowNull: false,
@@ -63,7 +67,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,                        
         },
         npwp: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.STRING,
             allowNull: true,
         },
         bank: {
@@ -71,7 +75,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: true,
         },
         account_number: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.STRING,
             allowNull: true,
         },
     });

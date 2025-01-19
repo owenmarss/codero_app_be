@@ -1,8 +1,8 @@
 const db = require("../models");
-const UserSchedule = db.userSchedule;
+// const UserSchedule = db.userTeachingSchedule;
+// const Schedule = db.schedule;
+// const Attendance = db.attendance;
 const User = db.user;
-const Schedule = db.schedule;
-const Attendance = db.attendance;
 const Partner = db.partner;
 const Student = db.student;
 const Curriculum = db.curriculum;
@@ -10,20 +10,21 @@ const Op = db.Sequelize.Op;
 
 const UserTeachingSchedule = db.userTeachingSchedule;
 const TeachingSchedule = db.teachingSchedule;
+const TeachingAttendance = db.teachingAttendance;
 
 
 // * Assign a schedule to users
 exports.assignScheduleToUsers = async (req, res) => {
-    const { schedule_id, user_ids, date } = req.body.data;
+    const { teaching_schedule_id, user_ids, date } = req.body.data;
 
-    if (!schedule_id || !Array.isArray(user_ids)) {
+    if (!teaching_schedule_id || !Array.isArray(user_ids)) {
         return res.status(400).send({
             message: "Schedule ID and an array of user IDs are required!",
         });
     }
 
     try {
-        const teachingSchedule = await TeachingSchedule.findByPk(schedule_id);
+        const teachingSchedule = await TeachingSchedule.findByPk(teaching_schedule_id);
         if (!teachingSchedule) {
             return res.status(404).send({
                 message: "Schedule not found!",
@@ -35,19 +36,26 @@ exports.assignScheduleToUsers = async (req, res) => {
         const userTeachingSchedules = await UserTeachingSchedule.findAll({
             where: {
                 user_id: user_ids,
-                schedule_id: schedule_id,
+                teaching_schedule_id: teaching_schedule_id,
             }
         });
 
-        const attendanceData = userTeachingSchedules.map((userTeachingSchedule) => ({
-            user_schedule_id: userSchedule.id,
-            date: date || null,
-            arrival_time: "Belum Isi",
-            departure_time: "Belum Isi",
-            payroll_id: null,
-        }));
+        const attendanceData = userTeachingSchedules.map((userTeachingSchedule) => {
+            const reimbursementStatus = teachingSchedule.session_type === 'Onsite' ? 'Belum Isi' : 'Tidak Ada';
 
-        await Attendance.bulkCreate(attendanceData);
+            console.log(`Assigning reimbursement_status: ${reimbursementStatus}`); // Debug log
+
+            return {
+                user_teaching_schedule_id: userTeachingSchedule.id,
+                date: date || null,
+                arrival_time: "Belum Isi",
+                departure_time: "Belum Isi",
+                teaching_payroll_id: null,
+                reimbursement_status: reimbursementStatus,
+            }
+        });
+
+        await TeachingAttendance.bulkCreate(attendanceData);
 
         res.status(200).send({
             message: "Users were assigned to the schedule successfully!",
@@ -59,10 +67,64 @@ exports.assignScheduleToUsers = async (req, res) => {
     }
 }
 
+// ? Get all schedules
+exports.getAllSchedules = async (req, res) => {
+    try {
+        const teachingSchedule = await TeachingSchedule.findAll({
+            include: [
+                {
+                    model: Partner,
+                    as: "partner",
+                    attributes: ["id", "name", "address", "id_curriculum"],
+                    include: [
+                        {
+                            model: Curriculum,
+                            as: "curriculum",
+                            attributes: ["id", "curriculum_title", "curriculum_type"],
+                        },
+                    ]
+                },
+                {
+                    model: Student,
+                    as: "student",
+                    attributes: ["id", "name", "address", "id_curriculum"],
+                    include: [
+                        {
+                            model: Curriculum,
+                            as: "curriculum",
+                            attributes: ["id", "curriculum_title", "curriculum_type"],
+                        },
+                    ]
+                },
+                {
+                    model: User,
+                    as: "users",
+                    attributes: ["id", "first_name", "last_name", "position", "working_hour", "branch"],
+                    through: {
+                        attributes: [],
+                    }
+                }
+            ]
+        });
+
+        if (teachingSchedule.length === 0) {
+            return res.status(404).send({
+                message: "No schedules found!",
+            });
+        }
+
+        res.status(200).send(teachingSchedule);
+    } catch (err) {
+        res.status(500).send({
+            message: err.message || "Error retrieving UserSchedule"
+        });
+    }
+}
+
 // ? Get all assigned schedules
 exports.getAllAssignedSchedules = async (req, res) => {
     try {
-        const schedules = await Schedule.findAll({
+        const teachingSchedule = await TeachingSchedule.findAll({
             include: [
                 {
                     model: Partner,
@@ -99,13 +161,15 @@ exports.getAllAssignedSchedules = async (req, res) => {
             ]
         });
 
-        if(schedules.length === 0 || !schedules) {
+        const filteredSchedules = teachingSchedule.filter(schedule => schedule.users && schedule.users.length > 0);
+
+        if (filteredSchedules.length === 0) {
             return res.status(404).send({
-                message: "No schedules found!",
+                message: "No schedules found with assigned users!",
             });
         }
 
-        res.status(200).send(schedules);
+        res.status(200).send(filteredSchedules);
     } catch (err) {
         res.status(500).send({
             message: err.message || "Error retrieving UserSchedule"
@@ -128,8 +192,8 @@ exports.findByUser =  async (req, res) => {
         const user = await User.findByPk(user_id, {
             include: [
                 {
-                    model: Schedule,
-                    as: "schedules",
+                    model: TeachingSchedule,
+                    as: "teachingSchedules",
                     attributes: ["id", "client_type", "session_type", "activity", "day", "date", "start_time", "finish_time", "status"],
                     include: [
                         {
@@ -166,7 +230,7 @@ exports.findByUser =  async (req, res) => {
                         message: "The user(s) is / are not found!",
                     });
                 }
-                res.status(200).send(user.schedules);
+                res.status(200).send(user.teachingSchedules);
         })
     } catch (err) {
         res.status(500).send({
@@ -179,17 +243,17 @@ exports.findByUser =  async (req, res) => {
 // ? Find all UserSchedule with an schedule_id
 exports.findBySchedule = async (req, res) => {
     // ? Many-to-Many relationship
-    const schedule_id = req.params.id;
+    const teaching_schedule_id = req.params.id;
 
     // ? Many-to-Many relationship
-    if (!schedule_id) {
+    if (!teaching_schedule_id) {
         return res.status(400).send({
             message: "Content can not be empty!",
         });
     }
 
     try {
-        const schedule = await Schedule.findByPk(schedule_id, {
+        const teachingSchedule = await TeachingSchedule.findByPk(teaching_schedule_id, {
             include: [
                 {
                     model: User,
@@ -198,13 +262,13 @@ exports.findBySchedule = async (req, res) => {
                 },
             ],
         })
-            .then((schedule) => {
-                if (schedule.length === 0 || !schedule) {
+            .then((teachingSchedule) => {
+                if (teachingSchedule.length === 0 || !teachingSchedule) {
                     return res.status(404).send({
                         message: "The schedule(s) is / are not found!",
                     });
                 }
-                res.status(200).send(schedule.users);
+                res.status(200).send(teachingSchedule.users);
         })
     } catch (err) {
         res.status(500).send({
@@ -216,9 +280,9 @@ exports.findBySchedule = async (req, res) => {
 
 // ? Update the schedules associated with a user
 exports.updateSchedulesForUser = async (req, res) => {
-    const { user_id, schedule_ids } = req.body.data;
+    const { user_id, teaching_schedule_ids } = req.body.data;
 
-    if (!user_id || !Array.isArray(schedule_ids)) {
+    if (!user_id || !Array.isArray(teaching_schedule_ids)) {
         return res.status(400).send({
             message: "User ID and an array of schedule IDs are required!",
         });
@@ -232,7 +296,7 @@ exports.updateSchedulesForUser = async (req, res) => {
             });
         }
 
-        await user.setSchedules(schedule_ids);
+        await user.setTeachingSchedules(teaching_schedule_ids);
 
         res.status(200).send({
             message: "Schedules for the user were updated successfully!",
@@ -246,23 +310,23 @@ exports.updateSchedulesForUser = async (req, res) => {
 
 // ? Update the users associated with a schedule
 exports.updateUsersForSchedule = async (req, res) => {
-    const { schedule_id, user_ids } = req.body.data;
+    const { teaching_schedule_id, user_ids } = req.body.data;
 
-    if (!schedule_id || !Array.isArray(user_ids)) {
+    if (!teaching_schedule_id || !Array.isArray(user_ids)) {
         return res.status(400).send({
             message: "Schedule ID and an array of user IDs are required!",
         });
     }
 
     try {
-        const schedule = await Schedule.findByPk(schedule_id);
-        if (!schedule) {
+        const teachingSchedule = await TeachingSchedule.findByPk(teaching_schedule_id);
+        if (!teachingSchedule) {
             return res.status(404).send({
                 message: "Schedule not found!",
             });
         }
 
-        await schedule.setUsers(user_ids);
+        await teachingSchedule.setUsers(user_ids);
 
         res.status(200).send({
             message: "Users for the schedule were updated successfully!",
@@ -276,9 +340,9 @@ exports.updateUsersForSchedule = async (req, res) => {
 
 // ? Delete the schedules associated with a user
 exports.deleteSchedulesForUser = async (req, res) => {
-    const { user_id, schedule_ids } = req.body.data;
+    const { user_id, teaching_schedule_ids  } = req.body.data;
 
-    if (!user_id || !Array.isArray(schedule_ids)) {
+    if (!user_id || !Array.isArray(teaching_schedule_ids)) {
         return res.status(400).send({
             message: "User ID and an array of schedule IDs are required!",
         });
@@ -294,8 +358,8 @@ exports.deleteSchedulesForUser = async (req, res) => {
 
         // Verify existing associations
         const schedulesToRemove = [];
-        for (const id of schedule_ids) {
-            const hasSchedule = await user.hasSchedule(id);
+        for (const id of teaching_schedule_ids) {
+            const hasSchedule = await user.hasTeachingSchedule(id);
             if (hasSchedule) {
                 schedulesToRemove.push(id);
             }
@@ -308,10 +372,10 @@ exports.deleteSchedulesForUser = async (req, res) => {
             });
         } 
 
-        await user.removeSchedules(schedulesToRemove);
+        await user.removeTeachingSchedules(schedulesToRemove);
 
         res.status(200).send({
-            message: `Successfully removed ${schedulesToRemove.length} schedule(s) from the user.`,
+            message: `Successfully removed ${schedulesToRemove.length} teaching schedule(s) from the user.`,
         });
     } catch (err) {
         res.status(500).send({
@@ -322,17 +386,17 @@ exports.deleteSchedulesForUser = async (req, res) => {
 
 // ? Delete the users associated with a schedule
 exports.deleteUsersForSchedule = async (req, res) => {
-    const { schedule_id, user_ids } = req.body.data;
+    const { teaching_schedule_id, user_ids } = req.body.data;
 
-    if (!schedule_id || !Array.isArray(user_ids)) {
+    if (!teaching_schedule_id || !Array.isArray(user_ids)) {
         return res.status(400).send({
             message: "Schedule ID and an array of user IDs are required!",
         });
     }
 
     try {
-        const schedule = await Schedule.findByPk(schedule_id);
-        if (!schedule) {
+        const teachingSchedule  = await TeachingSchedule.findByPk(teaching_schedule_id);
+        if (!teachingSchedule ) {
             return res.status(404).send({
                 message: "Schedule not found!",
             });
@@ -341,7 +405,7 @@ exports.deleteUsersForSchedule = async (req, res) => {
         // Verify existing associations
         const usersToRemove = [];
         for (const id of user_ids) {
-            const hasUser = await schedule.hasUser(id);
+            const hasUser = await teachingSchedule.hasUser(id);
             if (hasUser) {
                 usersToRemove.push(id);
             }
@@ -353,7 +417,7 @@ exports.deleteUsersForSchedule = async (req, res) => {
             });
         }
 
-        await schedule.removeUsers(usersToRemove);
+        await teachingSchedule.removeUsers(usersToRemove);
 
         res.status(200).send({
             message: "Users for the schedule were deleted successfully!",
