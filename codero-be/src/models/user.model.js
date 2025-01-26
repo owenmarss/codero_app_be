@@ -66,6 +66,16 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false,                        
         },
+        tax_id: {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+            references: {
+                model: "taxes", // Table name in the database
+                key: "id",      // Primary key in the Tax table
+            },
+            onUpdate: "CASCADE",
+            onDelete: "SET NULL",
+        },
         npwp: {
             type: Sequelize.STRING,
             allowNull: true,

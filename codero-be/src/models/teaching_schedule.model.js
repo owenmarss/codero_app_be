@@ -3,7 +3,7 @@ const { DataTypes } = require('sequelize');
 module.exports = (sequelize, Sequelize) => {
     const TeachingSchedule = sequelize.define('teaching_schedule', {
         client_type: {
-            type: DataTypes.ENUM('Sekolah / Centre', 'Private'),
+            type: DataTypes.ENUM('Partner', 'Private'),
             allowNull: false
         },
         session_type: {

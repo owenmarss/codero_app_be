@@ -10,9 +10,29 @@ module.exports = (sequelize, Sequelize) => {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        total_amount: {
+        total_amount_bruto: {
             type: DataTypes.INTEGER,
             allowNull: false,
+        },
+        monthly_ptkp: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+        daily_ptkp: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+        pkp: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+        pph_value: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        }, 
+        total_amount_netto: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
         },
         start_date: {
             type: DataTypes.DATEONLY,

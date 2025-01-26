@@ -14,6 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Define routes
+const taxRoutes = require("./routes/tax.routes.js");
 const userRoutes = require("./routes/user.routes.js");
 const partnerRoutes = require("./routes/partner.routes.js");
 const studentRoutes = require("./routes/student.routes.js");
@@ -29,6 +30,7 @@ const sessionRoutes = require("./routes/session.routes.js");
 const path = require("path");
 
 // Use routes
+app.use("/api/tax", taxRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/partners", partnerRoutes);

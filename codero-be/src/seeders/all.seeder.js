@@ -1,4 +1,5 @@
 const db = require("../models");
+const seedTax = require("./tax.seeder");
 const seedUsers = require("./user.seeder");
 const seedMessages = require("./message.seeder");
 const seedMessageRecipients = require("./message_recipient.seeder");
@@ -17,6 +18,9 @@ const seedAll = async () => {
         //TODO: Drop and recreate tables (fresh seeding)
         await db.sequelize.sync({ force: true });
         console.log("Database tables dropped and recreated.");
+
+        //* Seed taxes first
+        await seedTax();
 
         //* Seed users first
         await seedUsers();

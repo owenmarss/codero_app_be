@@ -28,6 +28,7 @@ db.sequelize = sequelize;
 
 // Define models
 db.user = require("./user.model.js")(sequelize, Sequelize);
+db.tax = require("./tax.model.js")(sequelize, Sequelize);
 
 //? Teaching Models
 db.teachingSchedule = require("./teaching_schedule.model.js")(
@@ -48,7 +49,10 @@ db.teachingPayroll = require("./teaching_payroll.model.js")(
 );
 
 //? Office Models
-db.officeAttendance = require("./office_attendance.model.js")(sequelize, Sequelize);
+db.officeAttendance = require("./office_attendance.model.js")(
+    sequelize,
+    Sequelize
+);
 db.officePayroll = require("./office_payroll.model.js")(sequelize, Sequelize);
 
 //? Transport Models
@@ -81,6 +85,16 @@ db.messageRecipient = require("./message_recipient.model.js")(
     sequelize,
     Sequelize
 );
+
+// Define User-Tax Relationship
+db.user.belongsTo(db.tax, {
+    foreignKey: "tax_id",
+    as: "tax",
+});
+db.tax.hasMany(db.user, {
+    foreignKey: "tax_id",
+    as: "users",
+});
 
 // Define Relationships
 //* Partner - Curriculum relationship
@@ -179,11 +193,20 @@ db.transport.belongsTo(db.reimbursement, {
 
 //* OfficeAttendance - User relationship
 db.officeAttendance.belongsTo(db.user, { foreignKey: "user_id", as: "users" });
-db.user.hasMany(db.officeAttendance, { foreignKey: "user_id", as: "officeAttendance" });
+db.user.hasMany(db.officeAttendance, {
+    foreignKey: "user_id",
+    as: "officeAttendance",
+});
 
 //* OfficeAttendance - OfficePayroll relationship
-db.officeAttendance.belongsTo(db.officePayroll, { foreignKey: "office_payroll_id", as: "officePayroll" });
-db.officePayroll.hasMany(db.officeAttendance, { foreignKey: "office_payroll_id", as: "officeAttendance" });
+db.officeAttendance.belongsTo(db.officePayroll, {
+    foreignKey: "office_payroll_id",
+    as: "officePayroll",
+});
+db.officePayroll.hasMany(db.officeAttendance, {
+    foreignKey: "office_payroll_id",
+    as: "officeAttendance",
+});
 
 //* Transport - Public-Transport relationship
 db.transport.hasOne(db.publicTransport, {
@@ -260,6 +283,8 @@ db.messageRecipient.belongsTo(db.user, {
 console.log("User Associations:", db.user.associations);
 console.log("");
 
+console.log("Tax Associations:", db.tax.associations);
+
 console.log(
     "Teaching Schedule Associations:",
     db.teachingSchedule.associations
@@ -299,7 +324,10 @@ console.log("");
 // console.log("PublicTransportData Associations:", db.publicTransportData.associations);
 // console.log("");
 
-console.log("Office Attendance Associations:", db.officeAttendance.associations);
+console.log(
+    "Office Attendance Associations:",
+    db.officeAttendance.associations
+);
 console.log("");
 
 console.log("Office Payroll Associations:", db.officePayroll.associations);
